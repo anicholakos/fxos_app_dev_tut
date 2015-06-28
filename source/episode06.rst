@@ -217,12 +217,14 @@ LocalStorage JavaScript API:
   values and form the jQuery Mobile collapsible div for each note entry. Note
   that this loop (**lines 13-22**) makes use of 3 additional methods of
   localStorage:
+
      * We first use the ``localStorage.length`` method to get the total number
        of items that are present.
      * Next we get the key for each item via the ``localStorage.key(index)``
        method.
      * Finally, we use the ``localStorage.getItem(<key>)`` method to retrieve
        the details for the note. 
+
 * For each note, we are simply creating a collapsible div for jQuery
   Mobile UI and appending it to the ``#note-list`` element.
 
