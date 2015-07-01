@@ -1,0 +1,736 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. Storage using IndexedDB &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="8. Episode 8: Using Web Activities" href="episode08.html" />
+    <link rel="prev" title="6. Enabling Storage" href="episode06.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="episode08.html" title="8. Episode 8: Using Web Activities"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="episode06.html" title="6. Enabling Storage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="storage-using-indexeddb">
+<span id="indexeddb"></span><h1>7. Storage using IndexedDB<a class="headerlink" href="#storage-using-indexeddb" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Episode 7 of the Firefox OS App Development Tutorial. In the
+previous episode, we looked at how you could add persistence to your
+application via the localStorage API. As the objects that you want to persist
+become more complicated, you can use another HTML5 API called
+<a class="reference external" href="http://www.w3.org/TR/IndexedDB/">IndexedDB API</a>,
+which lets you store complex objects. That&#8217;s what this episode is about.</p>
+<div class="section" id="prerequisites">
+<h2>7.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>You have setup your machine with the Firefox OS Simulator. If not, you can
+check out <a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a>, which takes you through the entire setup.</li>
+<li>You have a basic understanding of writing Firefox OS Apps. If not, I
+strongly suggest refering to earlier episodes, especially <a class="reference internal" href="episode02.html#hello-world"><em>Hello World</em></a>,
+that covers how to write your first Firefox OS App.</li>
+</ul>
+</div>
+<div class="section" id="what-this-episode-covers">
+<h2>7.2. What this Episode Covers<a class="headerlink" href="#what-this-episode-covers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>What is the <a class="reference external" href="http://www.w3.org/TR/IndexedDB/">HTML5 IndexedDB API</a>?</li>
+<li>Sample Firefox OS Application that covers using the HTML5 IndexedDB API.
+We shall be extending the same Notes application that we wrote earlier. We
+will replace the localStorage API calls with the IndexedDB API calls in this
+episode.</li>
+</ul>
+</div>
+<div class="section" id="episode-7-in-action">
+<h2>7.3. Episode 7 in Action<a class="headerlink" href="#episode-7-in-action" title="Permalink to this headline">¶</a></h2>
+<p>Let us check out the application in action first. The application is going to
+be similar to the previous one and in terms of UI and functionality, there is
+no difference.  But we will repeat it here for the sake of refreshing
+everything again.</p>
+<p>What we shall write is a mobile application that will allow us to save some
+quick notes. Each note will have a title and some details. These notes will be
+saved in the Indexed DB of the device and then we can view all our notes too.</p>
+<p>All right then, the first screen of the mobile app is shown below:</p>
+<a class="reference internal image-reference" href="_images/save_notes1.png"><img alt="SaveNotes app on launch" src="_images/save_notes1.png" style="height: 350px;" /></a>
+<p>When we click on the <tt class="docutils literal"><span class="pre">Add</span> <span class="pre">a</span> <span class="pre">Note</span></tt> button, we get a screen as shown below
+where we can enter the title and details for the new note. Once we are done, we
+can save the note by clicking on the <tt class="docutils literal"><span class="pre">Save</span> <span class="pre">Note</span></tt> button.</p>
+<a class="reference internal image-reference" href="_images/save_notes2.png"><img alt="SaveNotes app with first note being edited" src="_images/save_notes2.png" style="height: 350px;" /></a>
+<p>If the note is successfully saved, it will display a message as shown below:</p>
+<a class="reference internal image-reference" href="_images/save_notes3.png"><img alt="SaveNotes app with first note saved" src="_images/save_notes3.png" style="height: 350px;" /></a>
+<p>To view all the notes, you need to click on the <tt class="docutils literal"><span class="pre">View</span> <span class="pre">Notes</span></tt> button from the
+main screen. This will retrieve all the notes from the Local Storage and
+display them to you in a collapsible list form.</p>
+<a class="reference internal image-reference" href="_images/save_notes4.png"><img alt="SaveNotes app with list of notes" src="_images/save_notes4.png" style="height: 350px;" /></a>
+<p>You can click on any of the <tt class="docutils literal"><span class="pre">+</span></tt> signs and it will expand to show you the note
+details as shown below:</p>
+<a class="reference internal image-reference" href="_images/save_notes5.png"><img alt="SaveNotes app with list with expanded 2nd note" src="_images/save_notes5.png" style="height: 350px;" /></a>
+<p>If you wish to delete all the notes, there is also a <tt class="docutils literal"><span class="pre">Clear</span></tt> button. This
+will delete permanently all the notes from the Local Storage.</p>
+<p>Let’s get going with the code. Note that the example screenshots are from the
+Firefox OS Simulator running locally. So you can use your Firefox OS Simulator
+to run all the examples.</p>
+</div>
+<div class="section" id="download-full-source-code-episode-7">
+<h2>7.4. Download Full Source Code - Episode 7<a class="headerlink" href="#download-full-source-code-episode-7" title="Permalink to this headline">¶</a></h2>
+<p>I suggest that you begin with a full download of the project source code.
+Since the project depends on libraries like jQuery and jQuery Mobile, it will
+save you the hassle of downloading the dependent libraries.</p>
+<p>Download the code from: <a class="reference external" href="https://github.com/anicholakos/SaveNotesIndexedDB">https://github.com/anicholakos/SaveNotesIndexedDB</a></p>
+<p>Extract all the code in some directory. You should see a directory structure
+inside of <tt class="docutils literal"><span class="pre">SaveNotes</span></tt> that looks something like this:</p>
+<a class="reference internal image-reference" href="_images/save_notes_indexeddb_files.png"><img alt="SaveNotes app directory contents" src="_images/save_notes_indexeddb_files.png" style="height: 320px;" /></a>
+</div>
+<div class="section" id="html5-indexeddb-api">
+<span id="index-0"></span><h2>7.5. HTML5 IndexedDB API<a class="headerlink" href="#html5-indexeddb-api" title="Permalink to this headline">¶</a></h2>
+<p>The HTML5 IndexedDB API is another JavaScript API that allows you to build
+persistence in your web applications. At the end of the day, it is similar at a
+high level with the localStorage API that you saw in the previous episode.</p>
+<p>But it does have some important differences and these points will help you a
+bit in evaluating which way to go.</p>
+<ul class="simple">
+<li>LocalStorage using key pairs is good for data types and objects that are
+simple in nature. Often as the objects that you persist get complicated, you
+will notice that you will have to play a lot with JSON parsing and
+stringifying. IndexedDB is meant to address that by allowing you to persist
+complex objects and even create indices on key fields to help you retrieve
+easily.</li>
+<li>LocalStorage API is synchronous in nature. This means that you should ensure
+that your API operations are quick, else you could end up blocking the User
+Interface. The IndexedDB API is asynchronous in nature and this means that
+you are not blocking your UI to complete the operation. You make the call and
+once it is done, the result (either onsuccess or onerror is a callback to
+your functions).</li>
+<li>LocalStorage API is much simpler to use than IndexedDB API and which you
+shall see in a while but several wrappers do exist that sort of abstract out
+the API complexity.</li>
+<li>Searching through LocalStorage API is a challenge. On the other hand, in the
+IndexedDB world, you can create indices and search on them via various
+criteria.</li>
+</ul>
+<p>A few things to note about the IndexedDB API:</p>
+<ul class="simple">
+<li>The IndexedDB API allows your application to create data stores.</li>
+<li>Each datastore can be analogous to saving one type of data. For example,
+products, notes, or employees.</li>
+<li>The store contains records of data and you can define a key for your data and
+the values. The key can be autogenerated or even user provided. The value
+will contain your object.</li>
+<li>You can define one or more indices on your data and that makes it easier to
+search through the data.</li>
+</ul>
+</div>
+<div class="section" id="savenotesindexeddb-application">
+<h2>7.6. SaveNotesIndexedDB Application<a class="headerlink" href="#savenotesindexeddb-application" title="Permalink to this headline">¶</a></h2>
+<p>OK. Lets get going with understand the code and how the IndexedDB API has been
+used to persist (save) notes in our application.</p>
+</div>
+<div class="section" id="savenotesindexdb-application-manifest-webapp">
+<h2>7.7. SaveNotesIndexDB Application - <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt><a class="headerlink" href="#savenotesindexdb-application-manifest-webapp" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Notes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Uses the HTML5 Indexed API to demonstrate how to save data in your Firefox OS Apps.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;launch_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fullscreen&quot;</span><span class="o">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;icons&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;128&quot;</span><span class="o">:</span> <span class="s2">&quot;/images/notes_128.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;512&quot;</span><span class="o">:</span> <span class="s2">&quot;/images/notes_512.png&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;developer&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Romin Irani&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.rominirani.com&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;default_locale&quot;</span><span class="o">:</span> <span class="s2">&quot;en&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="savenotes-application-index-html">
+<h2>7.8. SaveNotes Application - <tt class="docutils literal"><span class="pre">index.html</span></tt><a class="headerlink" href="#savenotes-application-index-html" title="Permalink to this headline">¶</a></h2>
+<p>Next up is the <tt class="docutils literal"><span class="pre">index.html</span></tt> page and it is a simple jQuery Mobile page.</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span> 
+<span class="nt">&lt;html&gt;</span>
+
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="nt">&gt;</span> 
+  <span class="nt">&lt;title&gt;</span>Notes<span class="nt">&lt;/title&gt;</span> 
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.mobile-1.4.5.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery-2.1.4.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery.mobile-1.4.5.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span> 
+
+<span class="nt">&lt;body&gt;</span> 
+
+<span class="c">&lt;!-- Start of first page: #home --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;home&quot;</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">data-position=</span><span class="s">&quot;fixed&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h3&gt;</span>Notes<span class="nt">&lt;/h3&gt;</span>  
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /header --&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;btnAddNote&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span><span class="nt">&gt;</span>Add a Note<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;btnViewNotes&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span><span class="nt">&gt;</span>View Notes<span class="nt">&lt;/a&gt;</span>
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /content --&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page home --&gt;</span>
+
+<span class="c">&lt;!-- Start of the second page : #add-notes --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;add-notes&quot;</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">data-add-back-btn=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>Add a Note<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">id=</span><span class="s">&quot;noteTitle&quot;</span> <span class="na">value=</span><span class="s">&quot;&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Title&quot;</span> <span class="na">autofocus</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;textarea</span> <span class="na">placeholder=</span><span class="s">&quot;Details&quot;</span> <span class="na">name=</span><span class="s">&quot;noteDetails&quot;</span> <span class="na">id=</span><span class="s">&quot;noteDetails&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/textarea&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;btnSaveNote&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span><span class="nt">&gt;</span>Save Note<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;btnClearNotes&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span><span class="nt">&gt;</span>Clear<span class="nt">&lt;/a&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page add-notes --&gt;</span>
+
+<span class="c">&lt;!-- Start of the third page : #view-notes --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;view-notes&quot;</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">id=</span><span class="s">&quot;header&quot;</span>  <span class="na">data-add-back-btn=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>List of Notes<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;ui-btn-right&quot;</span>
+    <span class="na">id=</span><span class="s">&quot;clearAllNotesBtn&quot;</span><span class="nt">&gt;</span>Clear<span class="nt">&lt;/a&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;note-list&quot;</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+  
+  <span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page view-notes --&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the <tt class="docutils literal"><span class="pre">index.html</span></tt> page in detail now:</p>
+<ul>
+<li><p class="first">We have included the script in the <tt class="docutils literal"><span class="pre">app.js</span> <span class="pre">file</span></tt> on <strong>Line 11</strong>.</p>
+</li>
+<li><dl class="first docutils">
+<dt>There are 3 pages in the mobile application:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">home</span></tt> (<strong>Lines 17-28</strong>).</li>
+<li><tt class="docutils literal"><span class="pre">add-notes</span></tt> (<strong>Lines 31-44</strong>).</li>
+<li><tt class="docutils literal"><span class="pre">view-notes</span></tt> (<strong>Lines 47-59</strong>).</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">The <tt class="docutils literal"><span class="pre">#home</span></tt> page has two buttons for <tt class="docutils literal"><span class="pre">Add</span> <span class="pre">a</span> <span class="pre">Note</span></tt> and <tt class="docutils literal"><span class="pre">View</span> <span class="pre">Notes</span></tt>.</p>
+</li>
+<li><p class="first">The <tt class="docutils literal"><span class="pre">#add-notes</span></tt> page has a form for entering the title (<tt class="docutils literal"><span class="pre">#noteTile</span></tt>),
+details (<tt class="docutils literal"><span class="pre">#noteDetails</span></tt>) and two buttons for saving the note
+(<tt class="docutils literal"><span class="pre">#btnSaveNote</span></tt>) and clearing the fields (<tt class="docutils literal"><span class="pre">#btnClearNotes</span></tt>).</p>
+</li>
+<li><p class="first">The <tt class="docutils literal"><span class="pre">#view-notes</span></tt> page has a button in the header to clear all notes
+(<tt class="docutils literal"><span class="pre">#clearAllNotesBtn</span></tt>) and it has a div area (<tt class="docutils literal"><span class="pre">#note-list</span></tt>) to display all
+current notes, once we get them from the Local Storage.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="savenotesindexeddb-application-app-js">
+<h2>7.9. SaveNotesIndexedDB Application - <tt class="docutils literal"><span class="pre">app.js</span></tt><a class="headerlink" href="#savenotesindexeddb-application-app-js" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136</pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">// variable which will hold the database connection</span>
+<span class="kd">var</span> <span class="nx">db</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">initializeDB</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">indexedDB</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Your environment supports IndexedDB&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+       <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Indexed DB is not supported. Where are you trying to run this?&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+ 
+    <span class="c1">// open the database</span>
+    <span class="c1">// 1st parameter : Database name. We are using the name &#39;notesdb&#39;</span>
+    <span class="c1">// 2nd parameter is the version of the database.</span>
+    <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">indexedDB</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;notesdb&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">onsuccess</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// e.target.result has the connection to the database</span>
+        <span class="nx">db</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+    <span class="p">}</span>
+	 
+    <span class="nx">request</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+    <span class="p">};</span>
+ 
+    <span class="c1">// this will fire when the version of the database changes</span>
+    <span class="c1">// We can only create Object stores in a versionchange transaction.</span>
+    <span class="nx">request</span><span class="p">.</span><span class="nx">onupgradeneeded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// e.target.result holds the connection to database</span>
+        <span class="nx">db</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">db</span><span class="p">.</span><span class="nx">objectStoreNames</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s2">&quot;notes&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">db</span><span class="p">.</span><span class="nx">deleteObjectStore</span><span class="p">(</span><span class="s2">&quot;notes&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// create a store named &#39;notes&#39;</span>
+        <span class="c1">// 1st parameter is the store name</span>
+        <span class="c1">// 2nd parameter is the key field that we can specify here. Here we have</span>
+        <span class="c1">// opted for autoIncrement but it could be your own provided value also.</span>
+        <span class="kd">var</span> <span class="nx">objectStore</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">createObjectStore</span><span class="p">(</span><span class="s1">&#39;notes&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">keyPath</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+                                                         <span class="nx">autoIncrement</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Object Store has been created&quot;</span><span class="p">);</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//Initialize the Database first</span>
+    <span class="nx">initializeDB</span><span class="p">();</span>
+
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#btnAddNote&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//Change to the add-notes</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">mobile</span><span class="p">.</span><span class="nx">changePage</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#add-notes&quot;</span><span class="p">));</span>
+    <span class="p">});</span>
+
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#btnViewNotes&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//Change to the add-notes</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">mobile</span><span class="p">.</span><span class="nx">changePage</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#view-notes&quot;</span><span class="p">));</span>
+        <span class="c1">//Empty the list first</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#note-list&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="c1">//Read the notes</span>
+        <span class="kd">var</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">transaction</span><span class="p">([</span> <span class="s1">&#39;notes&#39;</span> <span class="p">]);</span>
+        <span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">objectStore</span><span class="p">(</span><span class="s1">&#39;notes&#39;</span><span class="p">);</span>
+
+        <span class="c1">// open a cursor to retrieve all items from the &#39;notes&#39; store</span>
+        <span class="nx">store</span><span class="p">.</span><span class="nx">openCursor</span><span class="p">().</span><span class="nx">onsuccess</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">cursor</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">cursor</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">cursor</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+                <span class="kd">var</span> <span class="nx">noteElement</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div data-role=&#39;collapsible&#39; data-mini=&#39;true&#39;&gt;&quot;</span><span class="p">);</span>
+                <span class="kd">var</span> <span class="nx">h3NoteTitle</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;h3/&gt;&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">title</span><span class="p">);</span>
+                <span class="kd">var</span> <span class="nx">pNoteDetails</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;p/&gt;&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">details</span><span class="p">);</span>
+                <span class="nx">noteElement</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">h3NoteTitle</span><span class="p">);</span>
+                <span class="nx">noteElement</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">pNoteDetails</span><span class="p">);</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#note-list&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">noteElement</span><span class="p">);</span>
+ 
+                <span class="c1">// move to the next item in the cursor</span>
+                <span class="nx">cursor</span><span class="p">.</span><span class="k">continue</span><span class="p">();</span>
+           <span class="p">}</span>
+           <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div[data-role=collapsible]&#39;</span><span class="p">).</span><span class="nx">collapsible</span><span class="p">({</span><span class="nx">refresh</span><span class="o">:</span><span class="kc">true</span><span class="p">});</span>
+        <span class="p">};</span>
+    <span class="p">});</span>
+
+    <span class="c1">//Click Handlers for Add Notes page</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#btnSaveNote&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">noteTitle</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteTitle&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">noteDetails</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteDetails&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+
+        <span class="c1">// Create the transaction with 1st parameter is the list of stores and</span>
+        <span class="c1">// the second specifies a flag for the readwrite option</span>
+        <span class="kd">var</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">transaction</span><span class="p">([</span> <span class="s1">&#39;notes&#39;</span> <span class="p">],</span> <span class="s1">&#39;readwrite&#39;</span><span class="p">);</span>
+   
+        <span class="c1">// Create the Object to be saved i.e. our Note</span>
+        <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">title</span><span class="o">:</span> <span class="nx">noteTitle</span><span class="p">,</span>
+            <span class="nx">details</span><span class="o">:</span> <span class="nx">noteDetails</span>
+        <span class="p">};</span>
+  
+        <span class="c1">// Add the note to the store</span>
+        <span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">objectStore</span><span class="p">(</span><span class="s1">&#39;notes&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">store</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">onsuccess</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Your note has been saved&quot;</span><span class="p">);</span>
+        <span class="p">};</span>
+        <span class="c1">// Clear input areas for new note</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteTitle&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteDetails&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Error in saving the note. Reason: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#btnClearNotes&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteTitle&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteDetails&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#noteTitle&quot;</span><span class="p">).</span><span class="nx">focus</span><span class="p">();</span>
+    <span class="p">});</span>
+
+    <span class="c1">//Click Handlers for View Notes page</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#clearAllNotesBtn&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">transaction</span><span class="p">([</span> <span class="s1">&#39;notes&#39;</span> <span class="p">],</span> <span class="s1">&#39;readwrite&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">objectStore</span><span class="p">(</span><span class="s1">&#39;notes&#39;</span><span class="p">);</span>
+   
+        <span class="c1">// Delete all the notes</span>
+        <span class="c1">// Alternately if you know the ID, you can use store.delete(ID) for</span>
+        <span class="c1">// individual item deletion</span>
+        <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">store</span><span class="p">.</span><span class="nx">clear</span><span class="p">();</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">onsuccess</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#note-list&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;All Notes have been cleared&quot;</span><span class="p">);</span>
+         <span class="p">}</span>
+         <span class="nx">request</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+             <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Error while deleting notes: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+         <span class="p">};</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the source code in detail now since it contains the HTML5
+IndexedDB JavaScript API:</p>
+<ul class="simple">
+<li>First, the standard stuff. <strong>Line 48</strong>, the standard jQuery <tt class="docutils literal"><span class="pre">ready</span></tt>
+function, is fired and the first thing that we are invoking here is a call to
+the <tt class="docutils literal"><span class="pre">initializeDB()</span></tt> function. In this function, we shall create the
+database+store and get it ready for other operations.</li>
+<li>In <strong>line 2</strong> we define our <tt class="docutils literal"><span class="pre">db</span></tt> variable that will hold the connection to
+the database that we shall use subsequently when we add records, delete
+records, search for records, etc.</li>
+<li>The <tt class="docutils literal"><span class="pre">initializeDB()</span></tt> function is defined in <strong>lines 4-46</strong>.</li>
+<li>We check first for IndexedDB support by checking the property <tt class="docutils literal"><span class="pre">indexedDB</span></tt>
+in the <tt class="docutils literal"><span class="pre">window</span></tt> object. This will typically not be needed since the support
+is there, but I am just showing you this in case you want to introduce this
+code to other browsers via your desktop web applications too. Keep in mind
+that this is an evolving standard and support is not fully there across all
+browsers. For FirefoxOS, you can rest assured that support is present.</li>
+<li>On <strong>line 13</strong> we open our database. We are naming the database <tt class="docutils literal"><span class="pre">notesdb</span></tt>
+and providing a version of the database &#8211; <tt class="docutils literal"><span class="pre">1</span></tt> in this case. Keep in mind
+that the IndexedDB API is an asynchronous API, so we are defined two
+callbacks: onsuccess and onerror. In <tt class="docutils literal"><span class="pre">onsuccess</span></tt>, we initialize the db
+variable to the database that we just opened.</li>
+<li>Great. Now that we have the connection to the database, we need to create the
+initial object store. Think of creating the initial tables. For this we need
+the <tt class="docutils literal"><span class="pre">onupgradeneeded</span></tt> callback that is defined on <strong>line 29</strong>. This
+function is only called when a version change occurs. We had passed the
+version 1 earlier and since there is no database present, it will get invoked
+the first time and we can then create our data stores here. If you ever want
+to change the schema or modify the store, you should change the version
+number in your upgraded version of the app when you open the database as
+shown on <strong>line 15</strong>.</li>
+<li>On <strong>line 41</strong>, we are creating our Object Store named <tt class="docutils literal"><span class="pre">notes</span></tt>. Keep in
+mind that we can create more object stores but since we are just dealing with
+notes here, I am creating only one. Apart from the first parameter which is
+the store name, the second parameter is the key field for your object. We are
+defining it as an auto-increment field with the key name as ID.</li>
+<li>This completes our initialization of the database. To summarize we opened the
+connection to the database (notesdb) and created one object store (notes).
+The notes that we create in the application will be saved in the notes
+datastore.</li>
+<li>Let us now focus on adding or aaving the note. Look at <strong>lines 86–114</strong>.
+Here you will notice that we first extract out the value that the user has
+entered for <tt class="docutils literal"><span class="pre">title</span></tt> and <tt class="docutils literal"><span class="pre">detail</span></tt>. Then on <strong>line 100</strong>, we first create a
+<strong>transaction</strong> object from the <strong>database</strong>. To create the transaction, you
+can provide a list of datastore names (in our case it is just one i.e.
+<tt class="docutils literal"><span class="pre">notes</span></tt>) and the transaction mode like read or readwrite. Since we
+want to write a new record, we are using the readwrite mode.</li>
+<li>On <strong>line 95</strong>, we are creating the standard Notes object. We store the
+attributes for title and details.</li>
+<li>Now within the transaction context, we obtain the store that we want to work
+with on <strong>line ??</strong> and then add the object to it. We use the onsuccess and
+onerror callbacks as needed.</li>
+<li>Now let us focus on <strong>lines ??-??</strong>. <strong>Lines ??–??</strong> indicate that when we
+press the <tt class="docutils literal"><span class="pre">View</span> <span class="pre">Notes</span></tt> button on the index page, it will navigate to the
+<tt class="docutils literal"><span class="pre">view-notes</span></tt> page.</li>
+<li>We clear the content i.e. any existing items that were present on the page
+by clearing the HTML content for <tt class="docutils literal"><span class="pre">#note-list</span></tt> on <strong>line ??</strong>.</li>
+<li>Then once again we obtain the transaction object from the database. This
+time we pass only the list of datastore names (in our case just <tt class="docutils literal"><span class="pre">notes</span></tt>).
+If you do not provide the second parameter i.e. <tt class="docutils literal"><span class="pre">transaction</span> <span class="pre">mode</span></tt>, it
+means that it is <strong>read mode</strong>. We then object the store from the transaction
+context on <strong>line ??</strong>.</li>
+<li>Next we use a cursor to iterate through each of the notes object and build
+out the notes HTMLElement that we shall create for each note. Notice the use
+of <tt class="docutils literal"><span class="pre">cursor.continue()</span></tt> on <strong>line ??</strong> to move to the next record.</li>
+<li>Then for each note, we are simply creating a collapsible div for jQuery
+Mobile UI and appending it to the <tt class="docutils literal"><span class="pre">#note-list</span></tt> element.</li>
+<li>Clearing (Deleting) all the notes is also straightforward. Refer to
+<strong>lines ??–??</strong>. The pattern of usage is the same. Get the transaction. Get
+the store. And then call the <tt class="docutils literal"><span class="pre">clear()</span></tt> function on the store.</li>
+</ul>
+</div>
+<div class="section" id="next-steps">
+<h2>7.10. Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>I encourage you to learn more about the IndexedDB API. Mozilla covers this in a
+lot more detail on a page on the MDN named <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB">Using Indexed DB</a>.
+A good exercise to try out would be to come up with your own little database
+design. Come up with a DB and some data stores. Create some indices and play
+around with basic CRUD Operations.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="episode08.html" title="8. Episode 8: Using Web Activities"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="episode06.html" title="6. Enabling Storage"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

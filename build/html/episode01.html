@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Overview and Development Setup &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="2. Hello World" href="episode02.html" />
+    <link rel="prev" title="Firefox OS App Development Tutorial" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="episode02.html" title="2. Hello World"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Firefox OS App Development Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="overview-and-development-setup">
+<span id="dev-setup"></span><h1>1. Overview and Development Setup<a class="headerlink" href="#overview-and-development-setup" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to a series of tutorials on getting started with Firefox OS app
+development.</p>
+<p>I will assume that the reason you are here is to learn how to write Firefox OS
+apps. Well, if you are web developer, I can safely state that you already know
+how to write Firefox OS applications since what the Firefox OS device runs are
+web applications.</p>
+<p>There is already enough material on the history of Firefox OS, the
+reasons for its existence, the devices that currently run the OS, and more
+available on the Web. I will not get into those details but briefly touch upon
+them so that we are on the same page. If you want to know more about why I want
+Firefox OS to succeed, here is my blog post titled <a class="reference external" href="http://rominirani.com/2013/07/23/firefox-os-the-mobile-web-platform-that-needs-to-succeed/">Firefox OS – The Mobile
+Platform That Needs To Succeed</a>.</p>
+<div class="section" id="what-is-firefox-os-a-quick-overview-please">
+<h2>1.1. What is Firefox OS? A Quick Overview, Please!<a class="headerlink" href="#what-is-firefox-os-a-quick-overview-please" title="Permalink to this headline">¶</a></h2>
+<p>As with many things of this nature, it is a very good idea to start with
+the <a class="reference external" href="http://en.wikipedia.org/wiki/Firefox_OS">Firefox OS Wikipedia page</a> to
+get a broad overview of what Firefox is and how it came to be.</p>
+</div>
+<div class="section" id="current-list-of-devices-support-firefox-os">
+<span id="index-0"></span><h2>1.2. Current List of Devices Support Firefox OS<a class="headerlink" href="#current-list-of-devices-support-firefox-os" title="Permalink to this headline">¶</a></h2>
+<p>The mobile phone space is rapidly changing. For a current list of the
+countries where Firefox OS phones can be purchased and which vendors sell them
+see <a class="reference external" href="https://www.mozilla.org/en-US/firefox/os/devices/">this page</a>.</p>
+</div>
+<div class="section" id="what-do-i-need-to-learn">
+<span id="index-1"></span><h2>1.3. What Do I Need to Learn?<a class="headerlink" href="#what-do-i-need-to-learn" title="Permalink to this headline">¶</a></h2>
+<p>Chances are that if you are web developer, you know everything there is to
+building Firefox OS apps. Use all the tools/frameworks that the web provides
+and it should work well. Remember these are days of infancy for Firefox OS, so
+do expect hiccups along the way.</p>
+<p>Developing for Firefox OS means developing for the Web. You will need to be
+comfortable with HTML5, CSS and JavaScript language. That is the bare minimum
+you will need to know. The better you are at it, the easier it will be. Since
+Firefox runs Web applications, you can use all the cool JavaScript
+frameworks/libraries that you are used to. Nothing prevents you from using
+that.</p>
+<p>Along the way, I shall try and cover some of the HTML5 JavaScript APIs but I
+strongly suggest that you be comfortable with basic Web technologies like
+HTML5/CSS/JavaScript. Codecademy has some great tutorials (<a class="reference external" href="http://www.codecademy.com/tracks/web">HTML/CSS</a> and <a class="reference external" href="http://www.codecademy.com/tracks/javascript">JavaScript</a>), if you want to learn about
+them.</p>
+</div>
+<div class="section" id="is-there-a-firefox-marketplace">
+<h2>1.4. Is There a Firefox Marketplace?<a class="headerlink" href="#is-there-a-firefox-marketplace" title="Permalink to this headline">¶</a></h2>
+<p>Yes, there is a Firefox Marketplace for your apps. This is similar to other
+vendors and if you are familiar with the submission process for them, you will
+find this no different.</p>
+<a class="reference internal image-reference" href="_images/fxos_marketplace.png"><img alt="Firefox Marketplace" src="_images/fxos_marketplace.png" style="height: 350px;" /></a>
+<p>Few things to note here:</p>
+<ul class="simple">
+<li>There is no one-time registration fee or yearly fee for being a publisher on
+the Firefox Marketplace.</li>
+<li>You can have both paid and free applications.</li>
+<li>There is a review process after you submit your applications and on approval,
+it is listed as available in the Marketplace.</li>
+</ul>
+<p>We shall cover the complete process of submitting your Firefox OS application
+to the Marketplace in a future episode. This will suffice for now.</p>
+</div>
+<div class="section" id="can-we-get-going-with-the-installation-of-dev-tools-please">
+<h2>1.5. Can We Get Going With the Installation of Dev Tools, Please?<a class="headerlink" href="#can-we-get-going-with-the-installation-of-dev-tools-please" title="Permalink to this headline">¶</a></h2>
+<p>Sorry, mate! There is no need for any special IDE for Firefox OS App
+Development. Feel free to use whatever tools you have in your toolbox for Web
+Development. As long as you are able to generate a standards based HTML5 Web
+app, you will be all set. All you really need is your good old text editor to
+get going.</p>
+<p>In later episodes, I will show how we can take an existing Web application,
+do a little bit of manifest work and boom, the app is ready for Firefox OS. But
+more on that later.</p>
+</div>
+<div class="section" id="firefox-os-simulator">
+<h2>1.6. Firefox OS Simulator<a class="headerlink" href="#firefox-os-simulator" title="Permalink to this headline">¶</a></h2>
+<p>Firefox now comes with the
+<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Tools/WebIDE">WebIDE</a> built-in.
+Just press <tt class="docutils literal"><span class="pre">Shift+F8</span></tt> in an active Firefox window to launch it.</p>
+<a class="reference internal image-reference" href="_images/WebIDE01.png"><img alt="WebIDE" src="_images/WebIDE01.png" style="height: 350px;" /></a>
+<p>Clicking on <tt class="docutils literal"><span class="pre">Select</span> <span class="pre">Runtime</span></tt> gives a drop-down list.</p>
+<a class="reference internal image-reference" href="_images/WebIDE02.png"><img alt="WebIDE Select Runtime" src="_images/WebIDE02.png" style="height: 350px;" /></a>
+<p>Clicking <tt class="docutils literal"><span class="pre">Install</span> <span class="pre">Simulator</span></tt> loads available simulator versions.</p>
+<a class="reference internal image-reference" href="_images/WebIDE03.png"><img alt="WebIDE Simulator Versions" src="_images/WebIDE03.png" style="height: 350px;" /></a>
+<p>Firefox OS 2.0 is the most recent stable version, so let&#8217;s install that.</p>
+<a class="reference internal image-reference" href="_images/WebIDE04.png"><img alt="WebIDE Install Firefox OS 2.0 simulator" src="_images/WebIDE04.png" style="height: 350px;" /></a>
+<p>Returning to <tt class="docutils literal"><span class="pre">Select</span> <span class="pre">Runtime</span></tt> now shows the simulator in the menu.</p>
+<a class="reference internal image-reference" href="_images/WebIDE05.png"><img alt="WebIDE Select Runtime with Firefox OS 2.0 simulator" src="_images/WebIDE05.png" style="height: 350px;" /></a>
+<p>Clicking on <tt class="docutils literal"><span class="pre">Firefox</span> <span class="pre">OS</span> <span class="pre">2.0</span></tt> launches the simulator.</p>
+<a class="reference internal image-reference" href="_images/WebIDE06.png"><img alt="WebIDE and running simulator" src="_images/WebIDE06.png" style="height: 400px;" /></a>
+<p>This marks the end of Episode 1. In the next episode, we shall look at writing
+our first application. We will stick to tradition and write Hello World on
+Firefox OS.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="episode02.html" title="2. Hello World"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Firefox OS App Development Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Submitting your Application to the Marketplace &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="5. Location, Location, Location" href="episode05.html" />
+    <link rel="prev" title="3. Working with the WebIDE" href="episode03.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="episode05.html" title="5. Location, Location, Location"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="episode03.html" title="3. Working with the WebIDE"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="submitting-your-application-to-the-marketplace">
+<span id="marketplace"></span><h1>4. Submitting your Application to the Marketplace<a class="headerlink" href="#submitting-your-application-to-the-marketplace" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Episode 4 of the Firefox OS App Development Tutorial. This episode
+will take you through the steps for submitting your Firefox OS App to the
+Firefox Marketplace.</p>
+<div class="section" id="prerequisites">
+<h2>4.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>You have setup your machine with the Firefox OS Simulator.  If not you can
+check out <a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a>, which takes you through the entire setup.</li>
+<li>You have installed the <a class="reference external" href="https://github.com/anicholakos/zipcodeapp">zipcodeapp</a> that we covered in <a class="reference internal" href="episode02.html#hello-world"><em>Hello World</em></a>.
+This tutorial uses that as an example, but if you have any other application
+installed in the Firefox WebIDE, then you should be able to follow along.</li>
+</ul>
+</div>
+<div class="section" id="what-we-shall-cover-in-this-episode">
+<h2>4.2. What we shall cover in this Episode<a class="headerlink" href="#what-we-shall-cover-in-this-episode" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>What is the Firefox Marketplace?</li>
+<li>Things you need to do before you consider submitting to the Marketplace.</li>
+<li>Additional files/materials you need before submission.</li>
+<li>Detailed steps to submitting the application and correcting errors along the
+way.</li>
+</ul>
+</div>
+<div class="section" id="firefox-marketplace-overview">
+<span id="index-0"></span><h2>4.3. Firefox Marketplace Overview<a class="headerlink" href="#firefox-marketplace-overview" title="Permalink to this headline">¶</a></h2>
+<p>Smartphones are what they are today because of the applications that are
+available on them. Each of the smartphone operating systems has a Marketplace where developers (individuals or organizations) can publish their applications, free or paid, for download by users.</p>
+<p>The Firefox Marketplace is a similar ecosystem for the Firefox Family of
+Applications. The Applications are not just restricted to Firefox OS Mobile
+Applications but they also cater for Firefox Browser Add-ons, Firefox for
+Android Apps, etc. The submission process is unified but we shall focus here on
+submitting the application for availability on Firefox OS Device.</p>
+<p>Few things to note in brief about the Firefox OS Marketplace so that you can
+compare it against other similar offerings like Apple iTunes, Google Play, etc.</p>
+<ul class="simple">
+<li>Signing up for the Marketplace is free. There is no yearly cost (like Apple
+iTunes) or one-time registration cost (Google Play).</li>
+<li>You can sell both free and paid applications. Selling paid applications
+would mean that you complete some additional paperwork.</li>
+<li>There is an application approval phase that is similar to what you see in
+iTunes. Once your application is accepted after submission, it will be
+put in a &#8220;Pending Review&#8221; status and members from the Marketplace Review team
+will go through your application to certify that it is not doing anything it
+is not supposed to do :-) Once reviewed, it is available immediately or later
+on, if you decide otherwise.</li>
+<li>You can provide filters to your application that will ensure that the
+application is available for installation only on devices having features
+that you have asked for them to have, such as some Device APIs.</li>
+<li>The Firefox Marketplace App is available both as a
+<a class="reference external" href="https://marketplace.firefox.com">website</a> and also an application on the
+device. This is similar to other Smartphone OS.</li>
+</ul>
+<p>The Firefox Marketplace (<a class="reference external" href="https://marketplace.firefox.com">https://marketplace.firefox.com</a>) as seen in your
+desktop browser shown below:</p>
+<a class="reference internal image-reference" href="_images/fxos_marketplace.png"><img alt="Firefox Marketplace" src="_images/fxos_marketplace.png" style="height: 350px;" /></a>
+<p>The Firefox Marketplace App in your device is shown below:</p>
+<a class="reference internal image-reference" href="_images/marketplaceapp1.png"><img alt="Marketplace Icon" src="_images/marketplaceapp1.png" style="height: 350px;" /></a>
+<p>You can use the OS Simulator itself to launch the Firefox Marketplace App and install some applications if you want to.</p>
+</div>
+<div class="section" id="steps-before-you-publish-to-the-marketplace">
+<h2>4.4. Steps Before You Publish to the Marketplace<a class="headerlink" href="#steps-before-you-publish-to-the-marketplace" title="Permalink to this headline">¶</a></h2>
+<p>Before you considering publishing to the Firefox Marketplace, do the following:</p>
+<ul class="simple">
+<li>Sign up for a Firefox Marketplace account. Visit <a class="reference external" href="https://marketplace.firefox.com/">https://marketplace.firefox.com/</a> and sign up.</li>
+<li>Test your application thoroughly. You cannot expect the Firefox Review team
+to go through each and every bit of your functionality. They may, but their
+main task is to do functionality testing and in the highly competitive mobile
+application ecosystem, users typically give you only one chance to get it
+right. So, make sure that the first impression is the best impression and
+test, test, test, and then do some more tests.</li>
+</ul>
+<p>Now that you have signed up and think your application is ready for the world, we still have some stuff to get in place.</p>
+</div>
+<div class="section" id="some-homework-to-do-before-submitting-the-application">
+<h2>4.5. Some Homework to do Before Submitting the Application<a class="headerlink" href="#some-homework-to-do-before-submitting-the-application" title="Permalink to this headline">¶</a></h2>
+<p>Here are the next things to take care of:</p>
+<ul class="simple">
+<li>Review your manifest.webapp file in detail. Pay special importantance to name
+and description fields. The Firefox Marketplace will read the name and
+description only from the Manifest file. And nothing is more important that
+choosing a good name for your Firefox OS Application and describing it in
+simple terms. Spend some time on this since a lot of users will search for
+Applications based on some keywords that come to their mind.</li>
+<li>You will need to decide which category your application will fall under. As
+we shall see a little later, the marketplace presents several categories that
+you can place your application under. Choose a category with care. Typically
+it is the first filter that users use while searching for your app in the
+marketplace.</li>
+<li>You need to get application icons and screenshots for your application in
+place because they will be used for submission. At the minimum you will need
+a 60×60 application icon. So far we had seen adding 16, 32, 48, etc icons to
+the manifest.webapp file but the Firefox OS Marketplace looks for a 60×60
+icon. So do that the icon to your application and update your manifest file
+with it. For example, your manifest.webapp entry for icons should look
+something like <strong>lines 6-9</strong>:</li>
+</ul>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Zipcodes&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;This app gives you information on zipcodes of the US!&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;launch_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;icons&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;128&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/zipcode_128.png&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;512&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/zipcode_512.png&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;developer&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Romin Irani&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.rominirani.com&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;default_locale&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;privileged&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;systemXHR&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Required to make Ajax Calls over the Network&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="submitting-to-firefox-marketplace">
+<h2>4.6. Submitting to Firefox Marketplace<a class="headerlink" href="#submitting-to-firefox-marketplace" title="Permalink to this headline">¶</a></h2>
+<p>We shall now start looking into the submission process for the Firefox Marketplace. Do keep in mind that I will take the Zipcodes app that we developed in Episode 2.</p>
+<ul class="simple">
+<li>Since we are delivering a packaged application to the Firefox Marketplace, we
+need to compress all the files that comprise the application into a single
+ZIP file. That is required by the Marketplace. So the first step is to take
+all the files and compress them. A sample screenshot is shown below. It shows
+the entire Zipcodes App directory and I am simply zipping up the entire set
+of files to a ZIP file. Use any ZIP utility of your choice.</li>
+</ul>
+<a class="reference internal image-reference" href="_images/compress1.png"><img alt="Compressing an app" src="_images/compress1.png" style="height: 300px;" /></a>
+<ul class="simple">
+<li>Next thing is to visit the <a class="reference external" href="https://marketplace.firefox.com/developers">https://marketplace.firefox.com/developers</a> site and login with your account.</li>
+<li>Once you are logged in, go to &#8220;My Submissions&#8221; located in the header as shown below:</li>
+</ul>
+<a class="reference internal image-reference" href="_images/marketplace1.png"><img alt="Online Marketplace" src="_images/marketplace1.png" style="height: 200px;" /></a>
+<p>This will bring up the list of apps that you have (It will be an empty list if you have not submitted any apps until now). Click on the &#8220;Submit a New App&#8221; link show in the image above.</p>
+<p>This will bring up a submission page where you will now need to provide various little pieces of information, some of which you would have ideally already prepared.</p>
+<ul class="simple">
+<li>We need to select the Firefox OS App as shown below. I had mentioned that the
+Firefox Marketplace is a unified marketplace for applications in the Firefox
+ecosystem (add-ons, Firefox for Android, Firefox OS apps), so you need to
+tell what kind of app you are submitting. Hence, in our case, it is the
+Firefox OS. Go ahead and select that.</li>
+</ul>
+<a class="reference internal image-reference" href="_images/appsubmission1.png"><img alt="Submit an app" src="_images/appsubmission1.png" style="height: 350px;" /></a>
+<ul class="simple">
+<li>Below that you will find two tabs. One for &#8220;Hosted&#8221; and the other for &#8220;Packaged&#8221;. Since we are submitting a packaged app, select that tab. You should see something like the screen below:</li>
+</ul>
+<a class="reference internal image-reference" href="_images/appsubmission2.png"><img alt="Hosted/Packaged App" src="_images/appsubmission2.png" style="height: 80px;" /></a>
+<ul class="simple">
+<li>Click on Select a file button and this will bring up a File Dialog. Go ahead and select the ZIP file that you generated earlier.</li>
+<li>The file will get uploaded and you should see a progress bar that indicates that it is getting uploaded.</li>
+<li>Finally when it is all uploaded, the Marketplace will start validating your
+ZIP file i.e. checking the manifest, any code violations, icons, etc.</li>
+<li>If there is a problem with the ZIP file contents, then a validation error will be shown.</li>
+<li>If the ZIP file validation is successful, you will get a positive validation message.</li>
+<li>Then click on the Continue button as shown below to proceed with filling out
+the rest of the information for your application.</li>
+</ul>
+<a class="reference internal image-reference" href="_images/continue1.png"><img alt="Continue Button" src="_images/continue1.png" style="height: 50px;" /></a>
+<ul class="simple">
+<li>Notice in the next screen that the description is completed for you from the manifest.webapp file.</li>
+<li>Select a Category for your application; I selected &#8220;Reference&#8221;. You
+need to also provide a Privacy Policy text. There are enough resources
+available on the net should you need to frame it more carefully than I have
+done. You can optionally also provide a Homepage URL and/or Support Website URL.
+You need to give your email address. The App does not need any Flash, hence
+selected &#8220;No&#8221; over there.</li>
+<li>The next piece of information is important. You need to provide 1 or more
+screenshots of your application. They should be at least 320px by 480px as
+specified. I suggest that you put in atleast 2-3 important screenshots for
+your application. Users do look at the screenshots in the Marketplace and it
+could influence them significantly to download your application. Adding a
+video is optional but highly recommended. Pictures speak louder than words
+:-)</li>
+<li>Finally, click on &#8220;Continue&#8221;. This will indicate that the app has been
+submitted and is now due for review.</li>
+<li>Now all you need to do is wait for 2-3 days to hear back from the team if
+your application was reviewed and is available in the Marketplace. At any
+point in time, you can login to your marketplace account, go to Settings and
+then My Submissions. You should see the list of your applications. A sample
+screenshot is shown below for the Zipcodes App and you will notice that it
+shows that it is under review. The nice thing is that it tells you the
+current queue status and expected time to complete the review.</li>
+</ul>
+<p>With this, we come to the of this episode. Hope you have enjoyed it.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>4.7. Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>I suggest that you first think about a useful mobile app and begin your work towards writing a Firefox OS App. Once you are ready, submit it to the Firefox Marketplace. You might find the screens and information required for submission change a bit from time to time but the basic steps should remain the step. Also this is a great time to get in early in the game while the Marketplace is still in a nascent phase, so grab the opportunity. The Web is waiting…</p>
+</div>
+<div class="section" id="coming-up-next">
+<h2>4.8. Coming up Next<a class="headerlink" href="#coming-up-next" title="Permalink to this headline">¶</a></h2>
+<p>The next few episodes will begin diving into Device APIs. We will start off with the GPS and see how we can use HTML5 Location APIs to retrieve the position of the device and do some interesting things with it. Stay tuned…</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="episode05.html" title="5. Location, Location, Location"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="episode03.html" title="3. Working with the WebIDE"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

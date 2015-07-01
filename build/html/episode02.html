@@ -1,0 +1,536 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. Hello World &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="3. Working with the WebIDE" href="episode03.html" />
+    <link rel="prev" title="1. Overview and Development Setup" href="episode01.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="episode03.html" title="3. Working with the WebIDE"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="episode01.html" title="1. Overview and Development Setup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="hello-world">
+<span id="id1"></span><h1>2. Hello World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Episode 2 of the Firefox OS App Development Tutorial. This series
+will take you through the steps to write Firefox OS Apps. This episode is about
+writing our first Hello World program for Firefox OS.</p>
+<div class="section" id="prerequisites">
+<h2>2.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>You have setup your machine with the Firefox OS Simulator. If not, you can go
+back to <a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a> to do this.</p>
+</div>
+<div class="section" id="brief-overview-of-firefox-os-apps">
+<span id="index-0"></span><h2>2.2. Brief Overview of Firefox OS Apps<a class="headerlink" href="#brief-overview-of-firefox-os-apps" title="Permalink to this headline">¶</a></h2>
+<p>Firefox OS supports 2 kinds of applications: <strong>Hosted Apps</strong> and
+<strong>Packaged Apps</strong>.</p>
+<p><strong>Hosted Apps</strong> are those that are hosted at a web URL. All the files that
+compose the app, like HTML, JS, CSS, images, are all present at the hosted
+URL itself. No file is present on the device and the device will need to be
+connected to the internet to use it. There are mechanisms now in HTML5 like
+<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache">AppCache</a> that allow you to cache assets of the file locally though for most
+purposes, we will assume that hosted apps are completely present online.</p>
+<p>The advantage of hosted apps is that you can update them easily and all your
+users will get the latest version immediately on next access. The flip side is
+that they have to be connected.</p>
+<p><strong>Packaged Apps</strong> take the opposite approach. All the files that compose your
+web app, like HTML, JS, CSS, images, are packaged into a ZIP file. The ZIP
+file is downloaded on your device and the app is installed locally.
+Applications that are deployed in this fashion can function without the device
+being connected to the Internet. However, if your application makes use of some
+public API or external web service, you will need to be connected.</p>
+<p>The Firefox Marketplace, which we shall see in a later episode, supports listing
+of both hosted and packaged applications.</p>
+</div>
+<div class="section" id="episode-2-in-action">
+<span id="index-1"></span><h2>2.3. Episode 2 in Action<a class="headerlink" href="#episode-2-in-action" title="Permalink to this headline">¶</a></h2>
+<p>Let us check out the application in action first. This will help you understand
+what we shall be achieving by the end of this blog post. While we can follow
+tradition and would like to say “Hello World”, it will be good to go a bit
+beyond that.</p>
+<p>What we shall write is a mobile application that will give us details on the
+different ZIP codes in the United States.  You enter a valid ZIP code in the
+application and it will give you the details of that ZIP code, including its state name, city name, longitude, and latitude.</p>
+<p>The mobile application makes use of an external Web service called <a class="reference external" href="http://api.zippopotam.us">Zip Code
+Galore!</a>. This will also help demonstrate making
+Ajax calls over the network from your Firefox OS Mobile. Nothing special there
+but by taking a little more realistic example, it will help set off things on
+the right note.</p>
+<p>All right then, the first screen of the mobile app is shown below:</p>
+<a class="reference internal image-reference" href="_images/app_in_action1.png"><img alt="App before entering ZIP code" src="_images/app_in_action1.png" style="height: 350px;" /></a>
+<p>When we enter a valid ZIP code, like <strong>20001</strong>, the app makes a call to the
+ZIP code service and retrieves/parses/displays the information as shown below:</p>
+<a class="reference internal image-reference" href="_images/app_in_action2.png"><img alt="App after submitting ZIP code" src="_images/app_in_action2.png" style="height: 350px;" /></a>
+<p>Simple and useful? Let’s get going with the code. Note that the example
+screenshots are from the Firefox OS Simulator running locally.</p>
+</div>
+<div class="section" id="download-full-source-code-episode-2">
+<span id="index-2"></span><h2>2.4. Download Full Source Code – Episode 2<a class="headerlink" href="#download-full-source-code-episode-2" title="Permalink to this headline">¶</a></h2>
+<p>I suggest that you begin with a full download of the project source code. Since
+the project depends on <a class="reference external" href="http://en.wikipedia.org/wiki/JavaScript_library">libraries</a> like <a class="reference external" href="http://jquery.com/">jQuery</a> and <a class="reference external" href="http://jquerymobile.com/">jQuery Mobile</a>, it
+will save you the hassle of downloading the dependent libraries.</p>
+<p>Go ahead and download the code from: <a class="reference external" href="https://github.com/anicholakos/zipcodeapp">https://github.com/anicholakos/zipcodeapp</a></p>
+<p>Extract all the code in some folder. For example, on my machine, the code is
+present in <tt class="docutils literal"><span class="pre">$HOME/Projects/zipcodeapp</span></tt>, but it could be any directory of your
+choice. You should see a folder structure inside of <tt class="docutils literal"><span class="pre">zipcodeapp</span></tt>, that looks
+like this:</p>
+<a class="reference internal image-reference" href="_images/folder_structure.png"><img alt="App folder structure" src="_images/folder_structure.png" style="height: 300px;" /></a>
+<p>You will notice that <tt class="docutils literal"><span class="pre">jQuery</span></tt> and <tt class="docutils literal"><span class="pre">jQueryMobile</span></tt> libraries are present but
+the key files that make up your application are <tt class="docutils literal"><span class="pre">index.html</span></tt>, <tt class="docutils literal"><span class="pre">zipcode.js</span></tt>,
+and the <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> files that we shall discuss next.</p>
+</div>
+<div class="section" id="the-ui-index-html">
+<span id="index-3"></span><h2>2.5. The UI  – <tt class="docutils literal"><span class="pre">index.html</span></tt><a class="headerlink" href="#the-ui-index-html" title="Permalink to this headline">¶</a></h2>
+<p>Since our application is a simple single screen application, all we need at
+this point is a single <tt class="docutils literal"><span class="pre">index.html</span></tt> file together with the <tt class="docutils literal"><span class="pre">zipcode.js</span></tt>
+file that contains the programming logic. The code for <tt class="docutils literal"><span class="pre">index.html</span></tt> is shown
+below:</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span> 
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="nt">&gt;</span> 
+  <span class="nt">&lt;title&gt;</span>US ZIP Code<span class="nt">&lt;/title&gt;</span> 
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.mobile-1.4.5.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery-2.1.4.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery.mobile-1.4.5.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;zipcode.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span> 
+
+<span class="nt">&lt;body&gt;</span> 
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;home&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">data-position=</span><span class="s">&quot;fixed&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;h3&gt;</span>US ZIP Code<span class="nt">&lt;/h3&gt;</span>  
+    <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /header --&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;search&quot;</span> <span class="na">id=</span><span class="s">&quot;searchCriteria&quot;</span> <span class="na">value=</span><span class="s">&quot;&quot;</span>
+      <span class="na">placeholder=</span><span class="s">&quot;Enter ZIP Code&quot;</span> <span class="na">autofocus</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;btnSearch&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span><span class="nt">&gt;</span>Search<span class="nt">&lt;/a&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;linebreak&quot;</span><span class="nt">&gt;</span><span class="ni">&amp;nbsp;</span><span class="nt">&lt;/div&gt;</span>	
+      <span class="nt">&lt;ul</span> <span class="na">data-role=</span><span class="s">&quot;listview&quot;</span> <span class="na">id=</span><span class="s">&quot;searchResults&quot;</span><span class="nt">&gt;</span>
+
+      <span class="nt">&lt;/ul&gt;</span>		
+    <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /content --&gt;</span>
+
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page home --&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The UI is based on <a class="reference external" href="https://jquerymobile.com/">jQuery Mobile</a>, which is a
+responsive web UI framework. I strongly suggest to use UI frameworks that are
+responsive in nature, as in they adapt to different screen sizes and resolutions.
+Increasingly the web is being accessed by people with different screen sizes
+and resolutions and it is imperative that your web UI adjust itself gracefully
+for optimum web display. You can also choose to go for frameworks like
+<a class="reference external" href="http://getbootstrap.com/">Bootstrap</a> or even <a class="reference external" href="https://developer.mozilla.org/en-US/Apps/Design/Firefox_OS_building_blocks">Firefox OS Building Blocks</a>,
+but I leave that choice to you.</p>
+<p>One point to note here: One may argue about why a simple application like this
+needs heavy frameworks like jQuery and jQuery Mobile. Can’t we just get going
+with our plain simple HTML coded by hand? Yes, you can. My intention here is not
+to demonstrate optimum coding techniques but to show you that you can use your
+existing frameworks while coding Firefox OS apps. The idea is to indicate to
+the reader that all the tools/frameworks that he/she is used to should be used
+as needed.</p>
+<p>So, moving on to the UI part, focus on <strong>lines 14-30</strong> for the user interface.</p>
+<ul class="simple">
+<li><strong>Line 21</strong> declares the input field that we shall use to allow for the user
+to enter the ZIP code. Note that we make good use of HTML5 attributes like
+placeholder and autofocus. The placeholder attribute is a good way to specify
+what needs to be entered in the input (like a hint). It saves a lot of real
+estate on a small mobile screen.</li>
+<li>Do note that the <tt class="docutils literal"><span class="pre">inputtype</span></tt> is also specified as <tt class="docutils literal"><span class="pre">search</span></tt>. This is a
+very useful attribute on mobile screens. It will allow for a quick way to
+clear up the input as you type text.</li>
+<li>If you want to brush up on HTML Form Features and input types, check out my
+blog posts: <a class="reference external" href="http://rominirani.com/html5-recipes-forms-enhancements/">HTML5 Recipes: Forms Enhancements</a> and <a class="reference external" href="http://rominirani.com/html5-recipes-new-input-types/">HTML5
+Recipes: New Input Types</a>.</li>
+<li><strong>Line 23</strong> specifies a button labeled &#8220;Search&#8221;, which when clicked needs
+to retrieve for us the details of the ZIP code entered.</li>
+<li><strong>Lines 25-27</strong> define the results list where we shall display the results.
+This is just my way of defining the UI. Feel free to be as creative as you
+want.</li>
+</ul>
+</div>
+<div class="section" id="the-code-zipcode-js">
+<h2>2.6. The code - <tt class="docutils literal"><span class="pre">zipcode.js</span></tt><a class="headerlink" href="#the-code-zipcode-js" title="Permalink to this headline">¶</a></h2>
+<p>Let us dicuss functionality now. Since programming logic for Firefox OS apps
+is written in JavaScript, we&#8217;ll put our code in the following <tt class="docutils literal"><span class="pre">zipcode.js</span></tt>
+file:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//Invoke ZIP Code Search API</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#btnSearch&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">zipcode</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#searchCriteria&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">({</span><span class="nx">mozSystem</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
+        <span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;http://api.zippopotam.us/us/&quot;</span> <span class="o">+</span> <span class="nx">zipcode</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="nx">xhr</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">xhr</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+                <span class="kd">var</span> <span class="nx">resp</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">xhr</span><span class="p">.</span><span class="nx">response</span><span class="p">);</span>
+                <span class="kd">var</span> <span class="nx">location_obj</span> <span class="o">=</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">places</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+                <span class="nx">result</span> <span class="o">+=</span> <span class="s2">&quot;&lt;li&gt;Latitude: &quot;</span> <span class="o">+</span> <span class="nx">location_obj</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&quot;</span><span class="p">;</span>
+                <span class="nx">result</span> <span class="o">+=</span> <span class="s2">&quot;&lt;li&gt;Longitude: &quot;</span> <span class="o">+</span> <span class="nx">location_obj</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&quot;</span><span class="p">;</span>
+                <span class="nx">result</span> <span class="o">+=</span> <span class="s2">&quot;&lt;li&gt;City: &quot;</span> <span class="o">+</span> <span class="nx">location_obj</span><span class="p">[</span><span class="s1">&#39;place name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&quot;</span><span class="p">;</span>
+                <span class="nx">result</span> <span class="o">+=</span> <span class="s2">&quot;&lt;li&gt;State: &quot;</span> <span class="o">+</span> <span class="nx">location_obj</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&quot;</span><span class="p">;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#searchResults&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#searchResults&#39;</span><span class="p">).</span><span class="nx">listview</span><span class="p">(</span><span class="s1">&#39;refresh&#39;</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<ul>
+<li><p class="first">We are using the standard jQuery <tt class="docutils literal"><span class="pre">.ready()</span></tt> callback to do our wiring once
+the page is loaded.</p>
+</li>
+<li><p class="first">The only functionality that we need is a <tt class="docutils literal"><span class="pre">click</span></tt> handler for the
+<tt class="docutils literal"><span class="pre">btnSearch</span></tt> button.  The code is a straightforward Ajax call to the web
+service hosted at <tt class="docutils literal"><span class="pre">http://api.zippopotam.us/us/&lt;YourZIPCode&gt;</span></tt>.  This
+service returns us a JSON formatted string for the ZIP code that we enter.
+For example, if you make the following request <a class="reference external" href="http://api.zippopotam.us/us/90210">http://api.zippopotam.us/us/90210</a>,
+it will return you the details for the ZIP code 90210. A
+sample JSON response is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&quot;post code&quot;</span><span class="p">:</span> <span class="s">&quot;90210&quot;</span><span class="p">,</span> <span class="s">&quot;country&quot;</span><span class="p">:</span> <span class="s">&quot;United States&quot;</span><span class="p">,</span>
+<span class="s">&quot;country abbreviation&quot;</span><span class="p">:</span> <span class="s">&quot;US&quot;</span><span class="p">,</span> <span class="s">&quot;places&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&quot;place name&quot;</span><span class="p">:</span> <span class="s">&quot;Beverly Hills&quot;</span><span class="p">,</span>
+<span class="s">&quot;longitude&quot;</span><span class="p">:</span> <span class="s">&quot;-118.4065&quot;</span><span class="p">,</span> <span class="s">&quot;state&quot;</span><span class="p">:</span> <span class="s">&quot;California&quot;</span><span class="p">,</span>
+<span class="s">&quot;state abbreviation&quot;</span><span class="p">:</span> <span class="s">&quot;CA&quot;</span><span class="p">,</span> <span class="s">&quot;latitude&quot;</span><span class="p">:</span> <span class="s">&quot;34.0901&quot;</span><span class="p">}]}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">A key thing to note over here. You could utilize the jQuery Ajax methods but
+I have intentionally shown you the raw XMLHTTPRequest object over here, so
+that you are aware of what is going on at the ground level. However, pay
+attention to <strong>line 5</strong>.  The XMLHttpRequest object is instantiated in the
+normal way but with an additional setting of mozSystem:true as shown below.
+This is required for the Firefox OS browser. I could not get it to work
+without that.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">({</span><span class="nx">mozSystem</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The next few lines make the standard Ajax call to the service and when the
+response is ready, it parses out the information, creates individual <tt class="docutils literal"><span class="pre">li</span></tt>
+elements for the result data and populates the <tt class="docutils literal"><span class="pre">searchResults</span></tt> with the
+response.</p>
+</li>
+</ul>
+<p>That is all we have in the code.</p>
+</div>
+<div class="section" id="manifest-file-manifest-webapp">
+<span id="index-4"></span><h2>2.7. Manifest file - <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt><a class="headerlink" href="#manifest-file-manifest-webapp" title="Permalink to this headline">¶</a></h2>
+<p>Now that the code is ready, we need to specify an additional file known as
+<tt class="docutils literal"><span class="pre">manifest.webapp</span></tt>. This file is needed to provide various meta data about
+your application. If you are coming from an Android world, think of this file
+as the <tt class="docutils literal"><span class="pre">android-manifest.xml</span></tt> file that you write.</p>
+<p>We shall go into the details on manifest in a later episode but for now, it is
+sufficient to know that this file will provide information like:</p>
+<ul class="simple">
+<li>Name of your app</li>
+<li>App version</li>
+<li>App description</li>
+<li>App icons</li>
+<li>Permissions that your app needs to run on device</li>
+<li>Locales that your app supports and much more</li>
+</ul>
+<p>Take a look at the <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file shown below:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Zipcodes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This app gives you information on zipcodes of the US!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;launch_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;icons&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;128&quot;</span><span class="o">:</span> <span class="s2">&quot;/images/zipcode_128.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;512&quot;</span><span class="o">:</span> <span class="s2">&quot;/images/zipcode_512.png&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;developer&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Romin Irani&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.rominirani.com&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;default_locale&quot;</span><span class="o">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;privileged&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;permissions&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;systemXHR&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Required to make Ajax Calls over the Network&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the entries:</p>
+<ul>
+<li><p class="first">The <strong>version</strong>, <strong>name</strong> and <strong>description</strong> should be straightforward to
+understand. A good practice is to choose them carefully so that they reflect
+accurately what your application does. Choose a versioning scheme that
+reflects your internal schemes and/or development/build processes.</p>
+</li>
+<li><p class="first">The <strong>launch_path</strong> specifies what file is to be invoked when your app is
+launched. This is ideally the first page that you would like to show when the
+user launches your app. The value should be a relative path in your
+application directory. In our case, the file we want to launch on application
+start is <tt class="docutils literal"><span class="pre">index.html</span></tt> and since the <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file is in the same
+folder as the <tt class="docutils literal"><span class="pre">index.html</span></tt>, we simply specify the value as
+<tt class="docutils literal"><span class="pre">/index.html</span></tt>. But make it a relative path in case the first page is
+nested inside some other directory than where the <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> is
+present.</p>
+</li>
+<li><p class="first">When your mobile application is installed on the Firefox OS Device, the OS
+will select the icon to be shown on the device, which when tapped will launch
+your application. To submit an app to the marketplace, it is required to have
+two sizes of icons: 128 pixel and 512 pixel (see
+<a class="reference external" href="https://developer.mozilla.org/en-US/Apps/Build/Manifest">https://developer.mozilla.org/en-US/Apps/Build/Manifest</a>).</p>
+</li>
+<li><p class="first">The next values <strong>developer</strong>, <strong>url</strong>, and <strong>name</strong> specify details on who
+created the application. Be consistent with these values and do specify a URL
+that actually exists.</p>
+</li>
+<li><p class="first">The <strong>default_locale</strong> is English (en) for now.</p>
+</li>
+<li><p class="first">The next 2 values are critical to the functioning of this application. This
+is because our application needs to invoke some special APIs i.e. in our case
+it is the Ajax call that is made to the external web service. Hence we have
+to specify one property name type and its value is set to privileged. Only
+privileged apps have access to special Web APIs for example, some of the device
+APIs, which we shall be seeing later. It is good to have this setup now
+itself. And since we have mentioned that our application type is privileged,
+we have to also mention which permissions you need. And that is specified by
+the permissions parameter. Currently since we need just the XMLHttpRequest to
+be made, we specify this as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;permissions&quot;: {
+   &quot;systemXHR&quot;: {
+       &quot;description&quot;: &quot;Required to make Ajax Calls over the Network&quot;
+   }
+}
+</pre></div>
+</div>
+<p>There is a <a class="reference external" href="https://developer.mozilla.org/en-US/Apps/Build/App_permissions">full list of permissions</a>
+for your reference. For a discussion on different types of Firefox Apps,
+check this <a class="reference external" href="https://developer.mozilla.org/en-US/Marketplace/Options/Packaged_apps">developer note</a>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="local-installation-and-testing">
+<h2>2.8. Local Installation and Testing<a class="headerlink" href="#local-installation-and-testing" title="Permalink to this headline">¶</a></h2>
+<p>This completes our discussion of writing our first Firefox OS App. Now comes
+the part of seeing it actually work. All we need to test out this application
+is:</p>
+<ol class="arabic simple">
+<li>You should have installed the <strong>Firefox OS Simulator</strong> in the <strong>WebIDE</strong> of
+your Firefox Browser.</li>
+<li>A working internet connection from your machine.</li>
+<li>You should have downloaded/written the application as described above. We
+will assume that the <tt class="docutils literal"><span class="pre">index.html</span></tt> and <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file are present
+in a directory named <tt class="docutils literal"><span class="pre">zipcodeapp</span></tt>. You should navigate to your own
+directory structure when called to later.</li>
+</ol>
+<p>Steps to install the application in your Firefox OS Simulator are given below:</p>
+<ol class="arabic">
+<li><p class="first">Launch your Firefox Browser.  Next, launch the WebIDE by pressing
+<tt class="docutils literal"><span class="pre">Shift+F8</span></tt>, and end up where we were at the end of
+<a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a>:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/WebIDE06.png"><img alt="WebIDE and running simulator" src="_images/WebIDE06.png" style="height: 400px;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">Since we have written a packaged app, we need to specify the directory where
+our <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file is. That will be sufficient for the WebIDE to
+pick up the rest of the details including the launch URL and so on. Click on
+<tt class="docutils literal"><span class="pre">Open</span> <span class="pre">App</span> <span class="pre">-&gt;</span> <span class="pre">Open</span> <span class="pre">Packaged</span> <span class="pre">App...</span></tt> as shown below:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/deploying_app1.png"><img alt="Selecting packaged app in WebIDE" src="_images/deploying_app1.png" style="height: 350px;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">The WebIDE will then read the manifest, validate it.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/deploying_app2.png"><img alt="Valid app in WebIDE" src="_images/deploying_app2.png" style="height: 350px;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">Clicking the triangle icon deploys the app to the simulator. The first time
+it runs you will be asked for permission to share your location.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/deploying_app3.png"><img alt="App deployed to simulator" src="_images/deploying_app3.png" style="height: 400px;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">After clicking <tt class="docutils literal"><span class="pre">Share</span></tt> you can use the app.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/deploying_app4.png"><img alt="App deployed to simulator" src="_images/deploying_app4.png" style="height: 400px;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">The app is now installed on the simulator for use later.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/deploying_app5.png"><img alt="App in phone menu" src="_images/deploying_app5.png" style="height: 400px;" /></a>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="development-cycle">
+<h2>2.9. Development Cycle<a class="headerlink" href="#development-cycle" title="Permalink to this headline">¶</a></h2>
+<p>In case you want to make changes to your application, all you need to do is
+modify the <tt class="docutils literal"><span class="pre">index.html</span></tt>, <tt class="docutils literal"><span class="pre">zipcode.js</span></tt>, <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> or additional
+files in your application. You do this in a normal way on your machine.</p>
+<p>Once the changes are ready, you can simply click on the refresh icon &#8211; which
+replaced the triangle you used to deploy the app the first time. This will load
+the latest version of the application and relaunch it for you in the simulator.
+Nice, isn&#8217;t it?</p>
+</div>
+<div class="section" id="next-steps">
+<h2>2.10. Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>I encourage you to enhance the current application by providing error checks,
+validation, etc. If you want, you could possibly try out writing your own app.
+If you are looking for other public web APIs to call, take a look at
+<a class="reference external" href="http://www.programmableweb.com">ProgrammableWeb</a>,  they list thousands of
+APIs. Maybe you could write a weather or currency app... the world is yours.</p>
+</div>
+<div class="section" id="coming-up-next">
+<h2>2.11. Coming up Next<a class="headerlink" href="#coming-up-next" title="Permalink to this headline">¶</a></h2>
+<p>The next episode will go into a little more detail for the Firefox OS
+Simulator, some issues that you may see when you write incorrect
+<tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> and how to use the Dev Tools within Firefox to understand
+issues, logs, etc.</p>
+<p>Once we cover that, we shall get going with publishing the application to the
+Marketplace in later episode.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="episode03.html" title="3. Working with the WebIDE"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="episode01.html" title="1. Overview and Development Setup"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

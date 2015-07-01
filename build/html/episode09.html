@@ -1,0 +1,457 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>9. Device Storage &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="10. Episode 10: Using mBaaS" href="episode10.html" />
+    <link rel="prev" title="8. Episode 8: Using Web Activities" href="episode08.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="episode10.html" title="10. Episode 10: Using mBaaS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="episode08.html" title="8. Episode 8: Using Web Activities"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="device-storage">
+<span id="id1"></span><h1>9. Device Storage<a class="headerlink" href="#device-storage" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Episode 9 of the Firefox OS App Development Tutorial. In the
+previous episode, we looked at how you can use Web Activities in your Firefox
+OS Applications. In this episode, we shall look at how you can access device
+storage in your Firefox OS Apps and  we will see how to browse
+through the content on your SD card, pictures, videos and music areas on your
+phone.</p>
+<div class="section" id="prerequisites">
+<h2>9.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>You have setup your machine with the Firefox OS simulator. If not you can
+check out <a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a>, which takes you through the entire setup.</li>
+<li>You have a basic understanding of writing Firefox OS Apps. If not, I
+strongly suggest refering to earlier episodes, especially <a class="reference internal" href="episode02.html#hello-world"><em>Hello World</em></a>,
+that covers how to write your first Firefox OS App.</li>
+</ul>
+</div>
+<div class="section" id="what-this-episode-covers">
+<h2>9.2. What this Episode covers<a class="headerlink" href="#what-this-episode-covers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/API/Device_Storage_API">Device Storage</a> and
+how to use the Device Storage APIs.</li>
+<li>Sample Firefox OS Application that covers how to access Device Storage.</li>
+</ul>
+</div>
+<div class="section" id="episode-9-in-action">
+<h2>9.3. Episode 9 in Action<a class="headerlink" href="#episode-9-in-action" title="Permalink to this headline">¶</a></h2>
+<p>Let us check out the application in action first to understand what we are
+trying to do here.</p>
+<p>What we shall write is a mobile application that will allow us browse through
+the files that are present on the different storage areas of the device. These
+different storage areas include the SD card, pictures, videos, and music. It will
+give you enough information to see how to access the files, get the file
+metadata. The episode does not cover how to write or create new files but the
+Storage API does provide that facility too, should you need that in your
+application.</p>
+<p>All right then, the first screen of the mobile app is shown below:</p>
+<a class="reference internal image-reference" href="_images/devicestorage1.png"><img alt="Opening image of Device Storage app" src="_images/devicestorage1.png" style="height: 350px;" /></a>
+<p>The screen has 4 buttons that will allow you to browse the contents of the
+particular device storage area on your phone.</p>
+<p>Keep in mind that the SD card browsing will not work on the simulator, but it should
+work fine on the device. I am able to browse videos, music, and pictures just fine on the simulator.</p>
+<p>When you click on the &#8220;Browse Music&#8221; button, it will access the music storage
+area and list down the contents. I believe the simulator goes and fetches it
+from the &#8220;Music&#8221; folder on the OS that you running it on and, in my case, it lists
+the files that are there in the &#8220;Music&#8221; folder. Notice that we list down the
+files and also other associated meta data like when it was last updated, file type, and the file size.</p>
+<p>Similarly, when you click on the &#8220;Browse Pictures&#8221; button, it will display all
+the images that are present in the Pictures storage area. I simply show a
+little preview by creating an image element as shown below. Once again, we not
+only list the files but also display the meta data: last updated, file type
+and file size.</p>
+<a class="reference internal image-reference" href="_images/devicestorage2.png"><img alt="App displaying pictures" src="_images/devicestorage2.png" style="height: 350px;" /></a>
+</div>
+<div class="section" id="download-full-source-code">
+<h2>9.4. Download Full Source Code<a class="headerlink" href="#download-full-source-code" title="Permalink to this headline">¶</a></h2>
+<p>I suggest that you begin with a full download of the project source code. Since
+the project depends on libraries like jQuery and jQuery Mobile, it will save
+you the hassle of downloading the dependent libraries.</p>
+<p>Go ahead &amp; download the code from: <a class="reference external" href="https://github.com/anicholakos/DeviceStorage">https://github.com/anicholakos/DeviceStorage</a></p>
+<p>Extract all the code in some folder. On my machine, the code is
+present in <tt class="docutils literal"><span class="pre">/home/anicholakos/Projects/DeviceStorage</span></tt> but it could be any
+directory of your choice. You should see a folder structure inside of
+DeviceStorage, that looks something like this:</p>
+<a class="reference internal image-reference" href="_images/devicestoragefolder1.png"><img alt="Folder structure of DeviceStorage" src="_images/devicestoragefolder1.png" style="height: 150px;" /></a>
+</div>
+<div class="section" id="firefox-os-device-storage">
+<span id="index-0"></span><h2>9.5. Firefox OS Device Storage<a class="headerlink" href="#firefox-os-device-storage" title="Permalink to this headline">¶</a></h2>
+<p>The Device Storage API in Firefox OS is used to access the file system. Until now
+we had seen how to use persistence in our application via the LocalStorage and
+IndexedDB APIs and when you use those APIs you are pretty much dealing with
+storage but at a high level. You are not dealing with individual files and
+directories and reading/writing to them.</p>
+<p>The Device Storage API is just about that. Reading and writing to files
+directly. The Firefox OS exposes 5 storage areas that you can read and write
+from. They are:</p>
+<ul class="simple">
+<li>Apps</li>
+<li>SD card</li>
+<li>Videos</li>
+<li>Music</li>
+<li>Pictures</li>
+</ul>
+<p>The first storage area i.e. apps is available for certified applications only.
+This area is used by applications to read/write their data. We shall not
+attempt to do anything with that in this episode.</p>
+<p>The other four areas stand for pretty much what their names indicate and you
+can read and write to any of the areas.</p>
+<p>The API is fairly simple. All you need to do is invoke the
+<tt class="docutils literal"><span class="pre">navigator.getDeviceStorage()</span></tt> method and pass the storage area name to it, such as
+&#8220;SD card&#8221;, &#8220;music&#8221;, &#8220;pictures&#8221;, and &#8220;videos&#8221;, which will return a
+DeviceStorage Object that you can use to access the storage area.</p>
+<p>You have methods that let you browse/list down the contents of the storage
+area (which we shall see in the code later on). There are methods available for
+additional stuff too like:</p>
+<ul class="simple">
+<li>Determining free space</li>
+<li>Writing/creating a file</li>
+<li>Deleting a file</li>
+</ul>
+<p>Keep in mind that access to the storage area is a privileged operation and
+hence you must define the type of your application as privileged in the
+<tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file that we shall see in the next section. Additionally, you
+will have to specify the permissions (read or readwrite) for each of the
+storage areas that you wish to access in your application.</p>
+</div>
+<div class="section" id="devicestorage-application">
+<h2>9.6. DeviceStorage Application<a class="headerlink" href="#devicestorage-application" title="Permalink to this headline">¶</a></h2>
+<p>OK, let&#8217;s get going with understanding the code and how we can access Device Storage in our application.</p>
+</div>
+<div class="section" id="devicestorage-application-manifest-webapp">
+<h2>9.7. DeviceStorage Application - <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt><a class="headerlink" href="#devicestorage-application-manifest-webapp" title="Permalink to this headline">¶</a></h2>
+<p>The first thing we should discuss is the manifest file. This should be familiar
+now and it has the standard attributes like name, version, etc. There is
+nothing special happening here.</p>
+<p>The permissions are the most important over here. To access the storage areas
+in Firefox OS, your application needs to be a privileged application, so we are
+defining that in the <tt class="docutils literal"><span class="pre">“type”:</span> <span class="pre">“privileged”</span></tt> entry.</p>
+<p>Next we need to mention what permissions our application needs. You have to
+create an entry for as many storage areas that you want to access in your
+application and also the type of access that you want i.e. read or readwrite.
+The readwrite mode will be needed if you plan to create/modify files.</p>
+<p>You will notice in the manifest that we have provided readwrite permissions for
+each of the 4 storage areas (SD card, videos, music, and pictures).</p>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Device Storage&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;This app demonstrates how to use Device Storage&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;launch_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;fullscreen&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;icons&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;16&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/icon_016.png&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;32&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/icon_032.png&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;48&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/icon_048.png&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;128&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/icon_128.png&quot;</span>
+    <span class="p">},</span>
+	<span class="nt">&quot;developer&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Romin Irani&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.rominirani.com&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;default_locale&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;privileged&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+	  <span class="nt">&quot;device-storage:videos&quot;</span><span class="p">:</span>  <span class="p">{</span> <span class="nt">&quot;access&quot;</span><span class="p">:</span> <span class="s2">&quot;readwrite&quot;</span> <span class="p">},</span>
+	  <span class="nt">&quot;device-storage:pictures&quot;</span><span class="p">:{</span> <span class="nt">&quot;access&quot;</span><span class="p">:</span> <span class="s2">&quot;readwrite&quot;</span> <span class="p">},</span>
+	  <span class="nt">&quot;device-storage:sdcard&quot;</span><span class="p">:</span>  <span class="p">{</span> <span class="nt">&quot;access&quot;</span><span class="p">:</span> <span class="s2">&quot;readwrite&quot;</span> <span class="p">},</span>
+	  <span class="nt">&quot;device-storage:music&quot;</span><span class="p">:</span>   <span class="p">{</span> <span class="nt">&quot;access&quot;</span><span class="p">:</span> <span class="s2">&quot;readwrite&quot;</span> <span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="devicestorage-application-index-html">
+<h2>9.8. DeviceStorage Application - <tt class="docutils literal"><span class="pre">index.html</span></tt><a class="headerlink" href="#devicestorage-application-index-html" title="Permalink to this headline">¶</a></h2>
+<p>Next up is the <tt class="docutils literal"><span class="pre">index.html</span></tt> page and it is a simple jQuery Mobile page.</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span> 
+<span class="nt">&lt;html&gt;</span>
+
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0&quot;</span><span class="nt">&gt;</span> 
+	<span class="nt">&lt;title&gt;</span>Notes<span class="nt">&lt;/title&gt;</span> 
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.mobile-1.4.5.min.css&quot;</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery-2.1.4.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery.mobile-1.4.5.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span> 
+	
+<span class="nt">&lt;body&gt;</span> 
+
+<span class="c">&lt;!-- Start of first page: #home --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;home&quot;</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">data-position=</span><span class="s">&quot;fixed&quot;</span> <span class="na">id=</span><span class="s">&quot;header&quot;</span><span class="nt">&gt;</span>
+	    <span class="nt">&lt;h3&gt;</span>Device Storage<span class="nt">&lt;/h3&gt;</span>  
+	<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /header --&gt;</span>
+
+	<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;browseSDCard&quot;</span>   <span class="na">data-role=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;big&quot;</span><span class="nt">&gt;</span>Browse SD Card<span class="nt">&lt;/a&gt;</span>
+		<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;browseVideos&quot;</span>   <span class="na">data-role=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;big&quot;</span><span class="nt">&gt;</span>Browse Videos<span class="nt">&lt;/a&gt;</span>
+		<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;browseMusic&quot;</span>    <span class="na">data-role=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;big&quot;</span><span class="nt">&gt;</span>Browse Music<span class="nt">&lt;/a&gt;</span>
+		<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">id=</span><span class="s">&quot;browsePictures&quot;</span> <span class="na">data-role=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;big&quot;</span><span class="nt">&gt;</span>Browse Pictures<span class="nt">&lt;/a&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;results&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+	<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /content --&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page home --&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the <tt class="docutils literal"><span class="pre">index.html</span></tt> page in detail now:</p>
+<ul class="simple">
+<li>We have included the script in <tt class="docutils literal"><span class="pre">app.js</span></tt> file on <strong>line 11</strong>.</li>
+<li>There is only 1 page in the mobile app as seen on <strong>line 17</strong>.</li>
+<li>This page has several buttons, which when clicked will display the contents of that storage area in the <tt class="docutils literal"><span class="pre">#results</span></tt> div shown on <strong>line 24-27</strong>.</li>
+</ul>
+</div>
+<div class="section" id="devicestorage-application-app-js">
+<h2>9.9. DeviceStorage Application - <tt class="docutils literal"><span class="pre">app.js</span></tt><a class="headerlink" href="#devicestorage-application-app-js" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">listContents</span><span class="p">(</span><span class="nx">storagename</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Clear up the list first</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#results&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">files</span> <span class="o">=</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">getDeviceStorage</span><span class="p">(</span><span class="nx">storagename</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">cursor</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">enumerate</span><span class="p">();</span>
+    <span class="nx">cursor</span><span class="p">.</span><span class="nx">onsuccess</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//alert(&quot;Got something&quot;);</span>
+        <span class="kd">var</span> <span class="nx">file</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">result</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">file</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">imageElement</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;img height=&quot;100&quot; width=&quot;75&quot;&gt;&#39;</span><span class="p">);</span>
+            <span class="nx">imageElement</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">file</span><span class="p">));</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;p&gt;&quot;</span> <span class="o">+</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">file</span><span class="p">.</span><span class="nx">lastModifiedDate</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span>
+                <span class="nx">file</span><span class="p">.</span><span class="nx">type</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">file</span><span class="p">.</span><span class="nx">size</span> <span class="o">+</span> <span class="s2">&quot;&lt;/p&gt;&quot;</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span>
+                <span class="s1">&#39;#results&#39;</span><span class="p">);</span>
+            <span class="nx">imageElement</span><span class="p">.</span><span class="nx">appendTo</span><span class="p">(</span><span class="s2">&quot;#results&quot;</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">done</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">done</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="k">continue</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#browseSDCard&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">listContents</span><span class="p">(</span><span class="s1">&#39;sdcard&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#browseVideos&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">listContents</span><span class="p">(</span><span class="s1">&#39;videos&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#browseMusic&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">listContents</span><span class="p">(</span><span class="s1">&#39;music&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#browsePictures&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">listContents</span><span class="p">(</span><span class="s1">&#39;pictures&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the source code in detail now.</p>
+<ul class="simple">
+<li>First, the standard stuff. On <strong>line 25</strong>, the standard jQuery ready function is fired and you will find various click handlers defined for the 4 buttons.</li>
+<li>Each of the button click handlers invokes the same function listContents, which is provided a single parameter i.e. the name of the storage area to browser/list the contents.</li>
+<li>The listContents function is defined on <strong>line 1</strong>.</li>
+<li>Pay attention to <strong>line 4</strong>, where we make a call to the navigator.getDeviceStorage (storagename) method. This is a standard call and we can pass either sdcard, videos, music or pictures to it. The return value is a object that we can use to enumerate the different files present over there.</li>
+<li>We use a cursor that we will use to enumerate through all the files. This cursor instance is obtained via the <tt class="docutils literal"><span class="pre">enumerate()</span></tt> function on the files object.</li>
+<li>If the cursor is obtained successfully, the onsuccess callback method is invoked. In this method, we simply go through each result. Remember the <tt class="docutils literal"><span class="pre">this.result</span></tt> gives a File object that has attributes like name, <tt class="docutils literal"><span class="pre">lastModifiedDate</span></tt>, type and size.</li>
+<li>So we are simply creating an image element and other meta data information element and appending it to the <tt class="docutils literal"><span class="pre">#results</span></tt> element in the page.</li>
+<li>If the file object is <tt class="docutils literal"><span class="pre">null</span></tt>, it means that there are no more elements and we can mark the done attribute as true. If it is not done, then we move to the next record via the continue method.</li>
+</ul>
+</div>
+<div class="section" id="local-installation-and-testing">
+<h2>9.10. Local Installation and Testing<a class="headerlink" href="#local-installation-and-testing" title="Permalink to this headline">¶</a></h2>
+<p>This completes our discussion of writing Firefox OS applications that access
+Device Storage. Now comes the part of seeing it actually work. All we need to
+test out this application is:</p>
+<ul class="simple">
+<li>You should have installed the Firefox OS simulator add-on in your Firefox Browser.</li>
+<li>A working internet connection from your machine.</li>
+<li>You should have downloaded/written the application as described above. We will assume that the <tt class="docutils literal"><span class="pre">index.html</span></tt> and <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file are present in a folder names <tt class="docutils literal"><span class="pre">DeviceStorage</span></tt>. You should navigate to your own directory structure when called to later.</li>
+</ul>
+<p>Steps to install the application in your Firefox OS Simulator should be
+familiar to you now. Simply launch the Firefox OS Simulator in your Firefox
+Browser. From the Dashboard, click on the &#8220;Add Directory&#8221; button and point it to
+the <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt> file for the DeviceStorage application. On successful
+validation, the application will be installed and it will come up in your OS
+Simulator. For sample screenshots, refer to the section at the beginning of
+this blog post for Episode 9 in Action.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>9.11. Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>Device Storage is a key feature that you can use to write your own files and
+also create applications like File Explorer, etc. It can also be used to have a
+better control in imaging applications, where you want to access all the files
+present, and read/write to them via your own code. I recommend going through the
+official documentation on Device Storage and try to create a file, etc.</p>
+<p>Keep in mind not to use the Device Storage as a general mechanism for
+persistence. If you want to build application level persistence in your
+application, it is recommended that you still use LocalStorage and/or IndexedDB
+API.</p>
+<p>Until the next episode, stay tuned and give me feedback.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="episode10.html" title="10. Episode 10: Using mBaaS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="episode08.html" title="8. Episode 8: Using Web Activities"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

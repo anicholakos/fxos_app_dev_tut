@@ -1,0 +1,654 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. Location, Location, Location &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="6. Enabling Storage" href="episode06.html" />
+    <link rel="prev" title="4. Submitting your Application to the Marketplace" href="episode04.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="episode06.html" title="6. Enabling Storage"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="episode04.html" title="4. Submitting your Application to the Marketplace"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="location-location-location">
+<span id="locationlocation"></span><h1>5. Location, Location, Location<a class="headerlink" href="#location-location-location" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Episode 5 of the Firefox OS App Development Tutorial. This episode
+will take you through the steps for writing Firefox OS Apps that are location
+aware. What this means is that your application can interact with the
+<a class="reference external" href="http://en.wikipedia.org/wiki/GPS_navigation_device">GPS receiver</a>
+that is present on the Firefox OS Device, retrieve the current position
+(<a class="reference external" href="http://en.wikipedia.org/wiki/Latitude">latitude</a>, <a class="reference external" href="http://en.wikipedia.org/wiki/Longitude">longitude</a>) and thereby help you write
+location based applications.</p>
+<div class="section" id="prerequisites">
+<h2>5.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>You have setup your machine with the Firefox OS Simulator.  If not you can
+check out <a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a>, which takes you through the entire setup.</li>
+<li>You have installed the <tt class="docutils literal"><span class="pre">zipcodeapp</span></tt> that we covered in <a class="reference internal" href="episode02.html#hello-world"><em>Hello World</em></a>.
+This tutorial uses that as an example, but if you have any other application
+installed in the Firefox WebIDE, then you should be able to follow along.</li>
+</ul>
+</div>
+<div class="section" id="what-this-episode-covers">
+<h2>5.2. What this Episode covers<a class="headerlink" href="#what-this-episode-covers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>What are Location Based Applications.</li>
+<li>HTML5 Geolocation API.</li>
+<li>Sample Firefox OS Application that covers using HTML5 Geolocation API.</li>
+<li>Sample Firefox OS Application that uses HTML5 Geolocation API to retrieve
+current position (latitude, longitude) and plot that on the Google Map.</li>
+</ul>
+</div>
+<div class="section" id="episode-5-in-action">
+<h2>5.3. Episode 5 in Action<a class="headerlink" href="#episode-5-in-action" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s check out the application in action first. This will help you understand
+what we shall be achieving by the end of this tutorial.</p>
+<p>What we shall write is two mobile applications that will retrieve our current
+position. On successfully getting the current position from the GPS receiver on
+the Firefox OS phone, the first app will simply display the current longitude
+and latitude, while the second app will plot that location on a map.</p>
+<p>All right then, the first app, Locate Me, is shown below:</p>
+<a class="reference internal image-reference" href="_images/locateme3.png"><img alt="LocateMe app with location" src="_images/locateme3.png" style="height: 350px;" /></a>
+<p>Here is the second app, Map Me:</p>
+<a class="reference internal image-reference" href="_images/mapme3.png"><img alt="MapMe app with location" src="_images/mapme3.png" style="height: 350px;" /></a>
+</div>
+<div class="section" id="download-full-source-code">
+<h2>5.4. Download Full Source Code<a class="headerlink" href="#download-full-source-code" title="Permalink to this headline">¶</a></h2>
+<p>I suggest that you begin with a full download of the project source code. Since
+Map Me depends on jQuery, it will save you the hassle of downloading the
+dependent libraries.</p>
+<p>Go ahead &amp; download the code from: <a class="reference external" href="https://github.com/anicholakos/WhereIAm">https://github.com/anicholakos/WhereIAm</a></p>
+<p>You&#8217;ll notice that there are two seperate folders for both applications. Go
+ahead and extract all the code in some folder, on my machine the code is
+present in /home/anicholakos/Projects/WhereIAm but it could be any directory of
+your choice. Now when you want to load up one of the apps, just select one of
+the folders in <tt class="docutils literal"><span class="pre">WhereIAm</span></tt>.</p>
+</div>
+<div class="section" id="location-based-applications">
+<span id="index-0"></span><h2>5.5. Location Based Applications<a class="headerlink" href="#location-based-applications" title="Permalink to this headline">¶</a></h2>
+<p>Smartphones come with a GPS receiver that is able to provide you with the
+current position of the device. Location Based Applications are those
+applications that make use of the device location to give you better localized
+data. If you are searching for restaurants in an area where you are currently
+taking a walk, it makes sense for the application to utilize the current
+location via the GPS and provide you with restaurants that within a certain
+radius around you. Location is here to stay and the ability of an application
+to know the users location is key.</p>
+</div>
+<div class="section" id="html5-geolocation-api">
+<h2>5.6. HTML5 Geolocation API<a class="headerlink" href="#html5-geolocation-api" title="Permalink to this headline">¶</a></h2>
+<p>HTML5 has support for determining the location of the user via the <a class="reference external" href="http://diveintohtml5.info/geolocation.html">Geolocation
+API</a>. It supports both a one
+time location retrieval and also continuous location retrieval depending on the
+need of your application. Geolocation support is determined via the
+navigator.geolocation object in the browser. Firefox OS supports the HTML5
+Geolocation support and you will find similar support in most mobile browsers
+and desktop browsers out there. You can check out the following <a class="reference external" href="http://caniuse.com/#feat=geolocation">table</a> to see what browsers support
+geolocation.</p>
+<p>In this episode, we shall be looking at the one-time location retrieval via the
+HTML5 Geolocation API. While the continous location retrieval is also
+available, I suggest that you should have a good use case for the same because
+you need to keep in mind that the easiest way to drain out the phone battery is
+via a badly written GPS application.</p>
+</div>
+<div class="section" id="locate-me">
+<h2>5.7. Locate Me<a class="headerlink" href="#locate-me" title="Permalink to this headline">¶</a></h2>
+<p>In this application, we shall first look at the HTML5 Geolocation API so that
+we can familiar with its usage. In the next application, we shall cover using
+that location to plot on the Google Map.</p>
+<p>Let&#8217;s check out the application running on the Firefox OS Simulator. The first
+screenshot is shown below and is a simple screen with a button labeled
+LocateMe.</p>
+<a class="reference internal image-reference" href="_images/locateme1.png"><img alt="LocateMe app without coordinates" src="_images/locateme1.png" style="height: 350px;" /></a>
+<p>When you click on the Where am I? button, it will popup a permission screen as
+shown below. This permission screen is not part of the application but is a
+standard one that all browsers display to ask for permission of the user.</p>
+<a class="reference internal image-reference" href="_images/locateme2.png"><img alt="LocateMe app asking for permission for GPS" src="_images/locateme2.png" style="height: 350px;" /></a>
+<p>Let us spend a minute on why this is needed. Determining the location of a
+device behind the scenes has privacy implications and the recommended practice
+is to always ask the user for permission, also known an opt-in. HTML5
+Geolocation specification makes it clear that browsers need to ask the user for
+permission before determining the location. Each browser does this differently
+via a bar that typically appears just under the address bar and the Firefox OS
+behavior is what you are seeing below.</p>
+<ul class="simple">
+<li>If you say “Yes” to the browser asking for permission, then it goes about its
+work to determine the location.</li>
+<li>If you refuse permission, then the error callback method (which we shall see
+in a while) will have the value PERMISSION_DENIED. So in well-written mobile
+applications, you should be prepared for a user refusing permission to get
+the location.</li>
+<li>Once you give the browser permission, it can remember that option on
+subsequent uses as you can see from the Remember my choice toggle button. You
+may also go into the Device Phone Settings and clear the permission.</li>
+</ul>
+<p>OK, so we can safely click on the &#8220;Allow&#8221; button. This will use the HTML5
+Geolocation API, retrieve the current latitude, longitude and display them on
+the screen.</p>
+<p>Let&#8217;s now take a look at the code.</p>
+</div>
+<div class="section" id="locate-me-manifest-webapp">
+<h2>5.8. Locate Me - manifest.webapp<a class="headerlink" href="#locate-me-manifest-webapp" title="Permalink to this headline">¶</a></h2>
+<p>The first thing we should discuss is the manifest file. This should be familiar
+now and it has the standard attributes like name, version, etc.</p>
+<p>What is specific to our example and important is to note that we have an
+additional permission for geolocation on <strong>line 14</strong>.</p>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;LocateMe&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Displays coordinates of the user&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;launch_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;icons&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;128&quot;</span><span class="p">:</span> <span class="s2">&quot;/icons/locate_me_icon_128.png&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;512&quot;</span><span class="p">:</span> <span class="s2">&quot;/icons/locate_me_icon_512.png&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;developer&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sotirios Nicholakos&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/anicholakos&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;geolocation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Required to get current location of user&quot;</span>
+        <span class="p">}</span>    
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="locate-me-index-html">
+<h2>5.9. Locate Me - index.html<a class="headerlink" href="#locate-me-index-html" title="Permalink to this headline">¶</a></h2>
+<p>Next up is the index.html page and it contains a button <tt class="docutils literal"><span class="pre">LocateMe</span></tt> on <strong>line
+#21</strong>. The button click handler and all relevant source code is present in
+<tt class="docutils literal"><span class="pre">app.js</span></tt> as referenced on <strong>line 10</strong>.</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en-us&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;title&gt;</span>Note App<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;gpsapp.css&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;gpsapp.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;header&gt;</span>Locate Me<span class="nt">&lt;/header&gt;</span>
+<span class="nt">&lt;main&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;save&quot;</span><span class="nt">&gt;</span>Where am I?<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;coordinates-wrapper&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">&quot;coordinates&quot;</span> <span class="na">class=</span><span class="s">&quot;container no-items&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/main&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="locate-me-gpsapp-js">
+<h2>5.10. Locate Me - gpsapp.js<a class="headerlink" href="#locate-me-gpsapp-js" title="Permalink to this headline">¶</a></h2>
+<p>This file contains the code that is invoked when the button is clicked on <strong>line
+3</strong>.</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;DOMContentLoaded&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">saveButton</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">&#39;#save&#39;</span><span class="p">);</span>
+    <span class="nx">saveButton</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;geolocation&#39;</span> <span class="k">in</span> <span class="nx">navigator</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">navigator</span><span class="p">.</span><span class="nx">geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Success callback if the location is found.</span>
+                <span class="nx">display</span><span class="p">(</span><span class="s1">&#39;Latitude: &#39;</span> <span class="o">+</span> <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="s1">&#39;&lt;br/&gt; Longitude: &#39;</span> <span class="o">+</span> <span class="nx">position</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">);</span>
+            <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Error callback if the location cannot be found</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to get user location&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+                <span class="nx">display</span><span class="p">(</span><span class="s1">&#39;Failed to get user location: &lt;i&gt;&#39;</span> <span class="o">+</span> <span class="nx">err</span><span class="p">.</span><span class="nx">message</span> <span class="o">+</span> <span class="s1">&#39;&lt;/i&gt;&#39;</span><span class="p">);</span>
+            <span class="p">},</span> <span class="p">{</span><span class="s2">&quot;timeout&quot;</span><span class="o">:</span><span class="mi">5000</span><span class="p">});</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// If the browser does not support Geolocation.</span>
+            <span class="nx">display</span><span class="p">(</span><span class="s1">&#39;You don\&#39;t have GPS&#39;</span><span class="p">);</span> 
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">display</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Display a string in #coordinates.</span>
+    <span class="kd">var</span> <span class="nx">coordinates</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">&#39;#coordinates&#39;</span><span class="p">);</span>
+    <span class="nx">coordinates</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">str</span><span class="p">;</span>
+    <span class="nx">coordinates</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s1">&#39;no-items&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the source code in detail now since it contains the HTML5
+Geolocation JavaScript API.</p>
+<ul class="simple">
+<li>On <strong>line 3</strong> we have an <tt class="docutils literal"><span class="pre">EventListener</span></tt> so that when the button is clicked,
+the application checks to see if
+GPS is available which is shown on <strong>lines 4-14</strong>. If the browser supports
+the HTML5 Geolocation API, then the coordinates are stored, otherwise an
+error message is displayed. As mentioned before, Geolocation support in the
+browser is present via the navigator.geolocation object.</li>
+<li>Notice that three parameters that are provided if Geolocation is supported on
+<strong>lines 6-10</strong>. The first parameter is the success callback function. This
+function will be invoked when the application is able to determine the
+location. The second parameter is the error callback method. This method will
+be invoked when the browser is unable to determine the location. The third
+parameter is an object that contains a timeout value that specifies the
+amount of time to wait for location data.</li>
+<li>If the browser is able to determine the location, the coordinates are stored
+using the store function that is declared on <strong>line 17</strong>. The stored string
+contains all the information about the location that you want. We extract out
+the latitude and longitude as shown in the code and we display that in the
+element with <tt class="docutils literal"><span class="pre">id=&quot;coordinates&quot;</span></tt>. In addition to them, you can also extract
+out other attributes like altitude, speed, heading, etc.</li>
+<li>If your location could not be determined, the error callback method is
+invoked. In our case, it is the error handler method on <strong>line 7</strong>. A
+parameter of type PositionError is passed to it. You can use this
+PositionError method to determine the exact reason why it failed via the code
+and message attributes. It could have 3 values:
+<tt class="docutils literal"><span class="pre">PositionError.PERMISSION_DENIED</span></tt>, <tt class="docutils literal"><span class="pre">PositionError.UNAVAILABLE</span></tt>, and
+<tt class="docutils literal"><span class="pre">PositionError.TIMEOUT</span></tt>. So, if you need to do some custom handling or error
+message depending on the error, you can check the value and then give a
+custom message instead of the message attribute.</li>
+</ul>
+<p>Note: We can also provide a 3rd parameter that is of type PositionsOptions,
+where we specify extra criteria to help guide the Geolocation API for the kind
+of location data characteristics. For example, we could have passed
+{enableHighAccuracy : “true”} , which tells the API to use the highest possible
+accuracy. Other attributes that you could specify are timeout and maxAge. Refer
+to the specification for more detail.</p>
+</div>
+<div class="section" id="map-me">
+<h2>5.11. Map Me<a class="headerlink" href="#map-me" title="Permalink to this headline">¶</a></h2>
+<p>We will now extend our code to not just display the current latitude and
+longitude but to also show a map with a marker that will represent our current
+location. For MapMe we use a JavaScript library called <a class="reference external" href="http://leafletjs.com">Leaflet</a> to display the interactive map.</p>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MapMe&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Retrieves current position and plots using Leaflet and OpenStreetMap.&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;launch_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;icons&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;128&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/locate_me_icon_128.png&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;512&quot;</span><span class="p">:</span> <span class="s2">&quot;/images/locate_me_icon_512.png&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;developer&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alex Hirschberg&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.openbookproject.net/tutorials/fxos/&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;default_locale&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;privileged&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;geolocation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Used to locate me&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;systemXHR&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Required to make Network calls&quot;</span> 
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="map-me-index-html">
+<h2>5.12. Map Me - index.html<a class="headerlink" href="#map-me-index-html" title="Permalink to this headline">¶</a></h2>
+<p>The home page contains a simple button and instruction to invoke the HTML5
+Geolocation API. When the button is pressed, a map is displayed with the user&#8217;s
+location. All relevant source code is present in app.js as referenced on <strong>line
+14</strong>.</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Map Me<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery-2.1.4.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;leaflet-0.7.3/leaflet.css&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;leaflet-0.7.3/leaflet.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;app.css&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;wrapper&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;button-header&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">&quot;locateMe&quot;</span><span class="nt">&gt;</span>Find my location<span class="nt">&lt;/button&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;map&quot;</span> <span class="na">hidden</span><span class="nt">&gt;&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+  
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="map-me-app-js">
+<h2>5.13. Map Me - app.js<a class="headerlink" href="#map-me-app-js" title="Permalink to this headline">¶</a></h2>
+<p>The heart of the application is in the app.js file below:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">MAPPME</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// create app object to prevent namespace conflicts</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="nx">setupLeafletMap</span><span class="p">();</span>
+    
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#locateMe&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#map&#39;</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+        <span class="nx">leafletFindLocation</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">setupLeafletMap</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">);</span>
+     
+    <span class="c1">// setup the tile data, loading from toolserver.org</span>
+    <span class="nx">L</span><span class="p">.</span><span class="nx">tileLayer</span><span class="p">(</span><span class="s1">&#39;http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">attribution</span><span class="o">:</span> <span class="s1">&#39;Map data © OpenStreetMap contributors&#39;</span><span class="p">,</span>
+      <span class="nx">maxZoom</span><span class="o">:</span> <span class="mi">18</span> <span class="c1">// try experimenting with different zoom values!</span>
+    <span class="p">}).</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+    
+    <span class="c1">// setup events for when we find user location</span>
+    <span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;locationfound&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">radius</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">accuracy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">posMarker</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">marker</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">latlng</span><span class="p">);</span>
+        <span class="nx">posMarker</span>
+            <span class="p">.</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">bindPopup</span><span class="p">(</span><span class="s2">&quot;You are within &quot;</span> <span class="o">+</span> <span class="nx">radius</span> <span class="o">+</span> <span class="s2">&quot; meters from this point&quot;</span><span class="p">).</span><span class="nx">openPopup</span><span class="p">();</span>
+        <span class="nx">MAPPME</span><span class="p">.</span><span class="nx">markers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">posMarker</span><span class="p">);</span>
+
+        <span class="kd">var</span> <span class="nx">accuracyMarker</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">circle</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">latlng</span><span class="p">,</span> <span class="nx">radius</span><span class="p">);</span>
+        <span class="nx">accuracyMarker</span><span class="p">.</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+        <span class="nx">MAPPME</span><span class="p">.</span><span class="nx">markers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">accuracyMarker</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;locationerror&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">map</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">leafletFindLocation</span> <span class="p">(</span><span class="nx">map</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">MAPPME</span><span class="p">.</span><span class="nx">markers</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">MAPPME</span><span class="p">.</span><span class="nx">markers</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="p">}</span>
+    
+    <span class="nx">MAPPME</span><span class="p">.</span><span class="nx">markers</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">marker</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// remove location markers from previous calls of the &#39;locationfound&#39; method)</span>
+        <span class="nx">map</span><span class="p">.</span><span class="nx">removeLayer</span><span class="p">(</span><span class="nx">marker</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">MAPPME</span><span class="p">.</span><span class="nx">markers</span> <span class="o">=</span> <span class="p">[];</span>
+    
+    <span class="nx">map</span><span class="p">.</span><span class="nx">locate</span><span class="p">({</span><span class="nx">setView</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">// Leaflet finds location and set </span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us look at the code in detail. We do the following:</p>
+<ul class="simple">
+<li>On <strong>line 4</strong>, we call the <tt class="docutils literal"><span class="pre">setupLeafletMap()</span></tt> function.</li>
+<li>On <strong>line 13</strong>, we create a Leaflet instance bound to the element with
+<tt class="docutils literal"><span class="pre">id=map</span></tt>.</li>
+<li>On <strong>lines 16-19</strong>, we point Leaflet to a server where it can find image
+tiles that show nearby streets and stitch them together to display on the
+screen.</li>
+<li>On <strong>lines 22-37</strong>, Leaflet is told what to do once the user&#8217;s location is
+found. It creates a map marker and a circle which represents the accuracy of
+the displayed location.</li>
+<li>On <strong>lines 6-9</strong>, define what should happen when the <tt class="docutils literal"><span class="pre">#locateMe</span></tt> button is
+pressed. When the button is pressed the map element is unhidden and the
+<tt class="docutils literal"><span class="pre">leafletFindLocation</span></tt> function is called.</li>
+<li><strong>Lines 43-50</strong> deal with the removal of any location markers that already
+exist on the map. This allows the user&#8217;s location to be found multiple times.</li>
+<li><strong>Line 52</strong> tells Leaflet to find the user&#8217;s location. Leaflet will then fire
+the <tt class="docutils literal"><span class="pre">locationfound</span></tt> or <tt class="docutils literal"><span class="pre">locationerror</span></tt> event.</li>
+</ul>
+</div>
+<div class="section" id="local-installation-and-testing">
+<h2>5.14. Local Installation and Testing<a class="headerlink" href="#local-installation-and-testing" title="Permalink to this headline">¶</a></h2>
+<p>This completes our discussion of writing Firefox OS applications that utilize
+the HTML5 Geolocation API. Now comes the part of seeing it actually work. All
+we need to test out this application is:</p>
+<ul class="simple">
+<li>You should have the Firefox OS Simulator set up in your WebIDE.</li>
+<li>A working internet connection from your machine.</li>
+<li>You should have downloaded/written the application as described above. You
+should navigate to your own directory structure when called to later.</li>
+</ul>
+<p>Steps to install the application in your Firefox OS Simulator should be
+familiar to you now. Simply go to Project and click Open Packaged App. Navigate
+to the folder containing the two application and click on one of the folders to
+install one of the applications. On successful validation, the application will
+be installed and it will come up in your OS Simulator.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>5.15. Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>I encourage you to enhance the current application by using the current
+location to do interesting things like retrieving nearby points of interest:
+hotels, movie theatres, etc. You could even write a weather application that
+detects where you are and retrieves the current weather conditions via a public
+API.</p>
+</div>
+<div class="section" id="coming-up-next">
+<h2>5.16. Coming up Next<a class="headerlink" href="#coming-up-next" title="Permalink to this headline">¶</a></h2>
+<p>The next episode will take you through another HTML5 API: Local Storage. This
+is a very critical API to help build persistence (saving data) in your
+application. Local Storage is also one of the key techniques to enable your
+application to work offline.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="episode06.html" title="6. Enabling Storage"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="episode04.html" title="4. Submitting your Application to the Marketplace"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
