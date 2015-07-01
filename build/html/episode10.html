@@ -1,0 +1,564 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>10. Episode 10: Using mBaaS &mdash; Firefox OS App Development Tutorial 2nd Edition documentation</title>
+    
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2nd Edition',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Firefox OS App Development Tutorial 2nd Edition documentation" href="index.html" />
+    <link rel="next" title="Attribution-ShareAlike 4.0 International" href="copyright.html" />
+    <link rel="prev" title="9. Device Storage" href="episode09.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="copyright.html" title="Attribution-ShareAlike 4.0 International"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="episode09.html" title="9. Device Storage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="episode-10-using-mbaas">
+<span id="mbaas"></span><h1>10. Episode 10: Using mBaaS<a class="headerlink" href="#episode-10-using-mbaas" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to Episode 10 of the Firefox OS App Developent Tutorial. In the
+previous episode, we looked at how you can use Device Storage in your Firefox
+OS Applications.</p>
+<p>In this episode, we shall be taking a look at an emerging area known as Mobile
+Backend as a Service (mBaaS). The idea is that we shall be powered our Firefox
+OS Application from Server side infrastructure and functionality that shall be
+provided by the mBaaS Provider.</p>
+<p>What we shall be doing is writing an application that displays random quotes. The
+quotes are those said by famous men over the years. For example, Albert Einstein
+said &#8220;The difference between stupidity and genius, is that genius has its
+limits&#8221; and so on. All these quotes will not be present locally in the Firefox
+OS App local storage or database, it will in fact be delivered from a
+server-side solution. This will make it easier for us to update the
+server-side with data whenever we want.</p>
+<div class="section" id="prerequisites">
+<h2>10.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>You have setup your machine with the Firefox OS Simulator.  If not you can
+check out <a class="reference internal" href="episode01.html#dev-setup"><em>Overview and Development Setup</em></a>, which takes you through the entire setup.</li>
+<li>You have a basic understanding of writing Firefox OS Apps.  If not, I
+strongly suggest refering to earlier episodes, especially <a class="reference internal" href="episode02.html#hello-world"><em>Hello World</em></a>,
+that covers how to write your first Firefox OS App.</li>
+</ul>
+</div>
+<div class="section" id="what-this-episode-covers">
+<h2>10.2. What this Episode covers<a class="headerlink" href="#what-this-episode-covers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>What is <a class="reference external" href="http://en.wikipedia.org/wiki/Mobile_Backend_as_a_service">mBaaS</a>, and
+why it is important. Discussion of
+<a class="reference external" href="http://www.kinvey.com">Kinvey</a>, a leading mBaaS provider.</li>
+<li>Sample Firefox OS Application that demonstrates integration with
+Kinvey. In other words, our Firefox OS application will be powered by Kinvey.</li>
+</ul>
+</div>
+<div class="section" id="episode-10-in-action">
+<h2>10.3. Episode 10 in Action<a class="headerlink" href="#episode-10-in-action" title="Permalink to this headline">¶</a></h2>
+<p>Let us check out the application in action first to understand what we are
+trying to do here.</p>
+<p>What we shall write is a mobile application that shows us quotes made by famous
+personalities. We shall first show the list of famous personalities. When you
+select a personality, the quotes attributed to that person will be shown.</p>
+<p>All right then, the first screen of the mobile app is shown below:</p>
+<a class="reference internal image-reference" href="_images/quotes1.png"><img alt="Quotes activity app on launch" src="_images/quotes1.png" style="height: 350px;" /></a>
+<p>This screen shows the list of personalities. When you click on a particular
+personality, say &#8220;Albert Einstein&#8221;, you will see the quotes attributed to him
+as shown in the screen below.</p>
+<a class="reference internal image-reference" href="_images/quotes2.png"><img alt="Quotes activity app with Einstein" src="_images/quotes2.png" style="height: 350px;" /></a>
+<p>Keep in mind that all data for this application is accessed from a hosted
+application that is running on the mBaaS provider Kinvey’s infrastructure. We
+shall see how easy it is to focus on your mobile functionality and let the
+heavy duty work of a server-side solution be taken care of by a provider, like
+Kinvey.</p>
+<p>The data is limited here, since I have just pulled some quotes from the <a class="reference external" href="http://www.brainyquote.com/">Brainy
+Quote</a>  site and populated my data store that is hosted on Kinvey.</p>
+</div>
+<div class="section" id="download-full-source-code-episode-10">
+<h2>10.4. Download Full Source Code – Episode 10<a class="headerlink" href="#download-full-source-code-episode-10" title="Permalink to this headline">¶</a></h2>
+<p>I suggest that you begin with a full download of the project source code.
+Since the project depends on libraries like jQuery and jQuery Mobile, it will
+save you the hassle of downloading the dependent libraries.</p>
+<p>Go ahead &amp; download the code from: <a class="reference external" href="https://github.com/anicholakos/Quotes">https://github.com/anicholakos/Quotes</a></p>
+<p>Extract all the code in some directory. You should see a directory structure
+inside of <tt class="docutils literal"><span class="pre">Quotes</span></tt>, that looks something like this:</p>
+<a class="reference internal image-reference" href="_images/quotes_files.png"><img alt="Files in Quotes activity" src="_images/quotes_files.png" style="height: 350px;" /></a>
+</div>
+<div class="section" id="what-is-a-mbaas">
+<span id="index-0"></span><h2>10.5. What is a mBaaS?<a class="headerlink" href="#what-is-a-mbaas" title="Permalink to this headline">¶</a></h2>
+<p>mBaaS stands for <a class="reference external" href="http://en.wikipedia.org/wiki/Mobile_Backend_as_a_service">Mobile Backend as a Service</a>. To give it some
+context, one of the challenges that most mobile developers face is that sooner
+or later, they have to create a common server side solution which can contain
+functionality for managing users, storing data in the cloud, etc.</p>
+<p>For example, consider that you are writing a mobile game and you wish to track
+high scores across your different users. In such a scenario, you have no option
+but to centrally store user scores in some sort of a server side solution. This
+is all and good but what this means is that you have to now learn a server side
+stack and figure out how to write server side applications, host them and
+manage them. This takes away your focus as a mobile developer but it is not a
+problem that you can wish away. Typically there will be folks who are good on
+the server-side and they can help you with the development, but if you are
+familiar with only the mobile client side of things, chances are that you want
+to get quickly started with it, almost no coding and still get the best of
+breed server side solution.</p>
+<p>This is exactly the spot that mBaaS providers want to address. They want you to
+focus on your application and its common needs on the server-side like users,
+authentication, data store to store application data and many such common
+services. All access of these services will be provided via a REST API or
+individual client side libraries that will wrap the calls and make it as easy
+as possible for you to invoke the operations in the cloud. The mBaaS providers
+also take the pain of hosting and running your site, so that is a great plus.</p>
+<p>There are many such mBaaS players out there and in this episode, we shall take
+a look at <a class="reference external" href="http://www.kinvey.com/">Kinvey</a> that I was able to get up and
+running for the Random Quotes application within literally minutes. It is not a
+stretch of my imagination but I got things up within an hour of signing up and
+that included accessing my data via the JavaScript wrapper that Kinvey
+provides.</p>
+<p>So to summarize, what we want to do with Kinvey at a high level is as follows:</p>
+<ol class="arabic simple">
+<li>Create an application. Let&#8217;s call it quotes.</li>
+<li>Use the Kinvey datastore to create 2 collections: <tt class="docutils literal"><span class="pre">Authors</span></tt> and
+<tt class="docutils literal"><span class="pre">Quotes</span></tt>. The authors will contain the names of the famous personalities
+and the quotes will contain 2 key attributes, who said it and what they
+said. The who will be the Author name from the Authors collection.</li>
+<li>Load some sample data into the Kinvey Collections: Authors and Quotes.</li>
+<li>Use the <em>Kinvey JavaScript Wrapper Library</em> to initialize the connection to
+our Server side and access the data via the Kinvey <tt class="docutils literal"><span class="pre">DataStore</span></tt> Object.</li>
+</ol>
+<p>The rest of the stuff is simply your client side functionality.</p>
+<p><em>One point to note is that we have used Kinvey in the article but if you try out
+other mBaaS solutions, you will find that at a conceptual level, they do the
+same thing. I am not going to pit one against the other and which one is
+better. I just haven’t done detailed research to give that kind of data here. I
+signed up for Kinvey, found its process super smooth and everything worked as
+documented. That is what I look for in any external public facing API. The rest
+is just your functionality.</em></p>
+</div>
+<div class="section" id="setup-quotes-on-kinvey">
+<h2>10.6. Setup Quotes on Kinvey<a class="headerlink" href="#setup-quotes-on-kinvey" title="Permalink to this headline">¶</a></h2>
+<p>In this section, I am going to do my best to explain to you the process of
+signing up for Kinvey, creating your application and all the steps that we
+identified in the previous section.</p>
+<p>The first thing you will need to do is sign up for Kinvey. Visit
+<a class="reference external" href="https://console.kinvey.com/">https://console.kinvey.com/</a> and sign up for the Service. You can go with the
+free plan for the moment.</p>
+<p>Once you have signed up successfully, you will be asked to create a new
+application. Go ahead and create it. My new application screen is shown below
+and you can use the same thing.</p>
+<a class="reference internal image-reference" href="_images/kinvey1.png"><img alt="Kinvey New App" src="_images/kinvey1.png" style="height: 200px;" /></a>
+</div>
+<div class="section" id="firefoxos-mbaas-application-manifest-webapp">
+<h2>10.7. FirefoxOS-mBaaS Application – <tt class="docutils literal"><span class="pre">manifest.webapp</span></tt><a class="headerlink" href="#firefoxos-mbaas-application-manifest-webapp" title="Permalink to this headline">¶</a></h2>
+<p>The first thing we should discuss is the manifest file. This should be familiar
+by now, it has the standard attributes like name and version. There is
+nothing special happening here.</p>
+<p>Note that since we will be making external calls to the Kinvey service, we need
+to mark the application as privileged and also to mention the permission for
+systemXHR so that outbound HTTP calls are permitted.</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Quotes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Quotes app powerd by mBaaS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;launch_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/index.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;icons&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;128&quot;</span><span class="o">:</span> <span class="s2">&quot;/images/quotes_128.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;512&quot;</span><span class="o">:</span> <span class="s2">&quot;/images/quotes_128.png&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;developer&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Romin Irani&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.rominirani.com&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;default_locale&quot;</span><span class="o">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;privileged&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;permissions&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;systemXHR&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Required to make Ajax Calls over the Network&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="firefoxos-mbaas-application-index-html">
+<h2>10.8. FirefoxOS-mBaaS Application – <tt class="docutils literal"><span class="pre">index.html</span></tt><a class="headerlink" href="#firefoxos-mbaas-application-index-html" title="Permalink to this headline">¶</a></h2>
+<p>Next up is the <tt class="docutils literal"><span class="pre">index.html</span></tt> page, which is just a simple jQuery Mobile page.</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span> 
+<span class="nt">&lt;html&gt;</span>
+
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="nt">&gt;</span> 
+  <span class="nt">&lt;title&gt;</span>Quotes<span class="nt">&lt;/title&gt;</span> 
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;jquery.mobile-1.4.5.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery-2.1.4.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;jquery.mobile-1.4.5.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;kinvey.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span> 
+
+<span class="nt">&lt;body&gt;</span> 
+
+<span class="c">&lt;!-- Start of first page: #home --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;home&quot;</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">data-position=</span><span class="s">&quot;fixed&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h3&gt;</span>Quotes<span class="nt">&lt;/h3&gt;</span>  
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /header --&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;p&gt;</span>List of Authors<span class="nt">&lt;/div&gt;</span>	
+    <span class="nt">&lt;ul</span> <span class="na">data-role=</span><span class="s">&quot;listview&quot;</span> <span class="na">id=</span><span class="s">&quot;authorList&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>		
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /content --&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page home --&gt;</span>
+
+<span class="c">&lt;!-- Start of second page: #quotespage --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;page&quot;</span> <span class="na">id=</span><span class="s">&quot;quotespage&quot;</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;header&quot;</span> <span class="na">data-position=</span><span class="s">&quot;fixed&quot;</span> <span class="na">data-add-back-btn=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h3</span> <span class="na">id=</span><span class="s">&quot;quotesTitle&quot;</span> <span class="na">style=</span><span class="s">&quot;white-space:normal;&quot;</span><span class="nt">&gt;&lt;/h3&gt;</span>  
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /header --&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">data-role=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul</span> <span class="na">data-role=</span><span class="s">&quot;listview&quot;</span> <span class="na">id=</span><span class="s">&quot;quotesList&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;/ul&gt;</span>		
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /content --&gt;</span>
+
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- /page quotespage --&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the <tt class="docutils literal"><span class="pre">index.html</span></tt> page in detail now:</p>
+<ul class="simple">
+<li>Since we will be invoking the Kinvey JavaScript Wrapper, we are including the
+reference to the Kinvey JS file on <strong>line 11</strong>.</li>
+<li>Next, we have included the our application script: <tt class="docutils literal"><span class="pre">app.js</span></tt> file on
+<strong>line 12</strong>.</li>
+<li>We have 2 pages in the mobile application. The first page is <tt class="docutils literal"><span class="pre">#home</span></tt>,
+beginning on <strong>line 17</strong>, and the second page is <tt class="docutils literal"><span class="pre">#quotespage</span></tt>
+beginning on <strong>line 32</strong>.</li>
+<li>The home page will show a list of authors that will be retrieved from our
+backend service.</li>
+<li>A click on any author will invoke the next service to retrieve the quotations
+that the author has made and the results will be shown in <tt class="docutils literal"><span class="pre">#quoteslist</span></tt>
+unordered list element (<strong>line 40</strong>).</li>
+</ul>
+</div>
+<div class="section" id="firefoxos-mbaas-application-app-js">
+<h2>10.9. FirefoxOS-mBaaS Application – <tt class="docutils literal"><span class="pre">app.js</span></tt><a class="headerlink" href="#firefoxos-mbaas-application-app-js" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">quotes</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">var</span> <span class="nx">authors</span> <span class="o">=</span> <span class="p">[];</span>
+
+<span class="kd">function</span> <span class="nx">mBaasInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">promise</span><span class="p">;</span>
+    <span class="nx">promise</span> <span class="o">=</span> <span class="nx">Kinvey</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+        <span class="nx">appKey</span><span class="o">:</span> <span class="s1">&#39;kid_TVIdIGLX_5&#39;</span><span class="p">,</span>
+        <span class="nx">appSecret</span><span class="o">:</span> <span class="s1">&#39;c451f2ac2f7742ddb488f757db2f15d2&#39;</span>
+    <span class="p">});</span>
+    <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">activeUser</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;All is well in Kinveyland&quot;</span><span class="p">);</span>
+        <span class="nx">populateAuthors</span><span class="p">();</span>
+    <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Could not initialize Kinvey&quot;</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">populateAuthors</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">Kinvey</span><span class="p">.</span><span class="nx">DataStore</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+            <span class="nx">authors</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">author</span> <span class="o">=</span> <span class="nx">response</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+                <span class="nx">authors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">author</span><span class="p">);</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#authorList&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;&#39;</span> <span class="o">+</span> <span class="nx">author</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;&lt;/li&gt;&#39;</span><span class="p">).</span><span class="nx">listview</span><span class="p">(</span><span class="s1">&#39;refresh&#39;</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">populateQuotes</span><span class="p">(</span><span class="nx">author</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Kinvey</span><span class="p">.</span><span class="nx">Query</span><span class="p">();</span>
+    <span class="nx">query</span><span class="p">.</span><span class="nx">equalTo</span><span class="p">(</span><span class="s1">&#39;who&#39;</span><span class="p">,</span> <span class="nx">author</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">Kinvey</span><span class="p">.</span><span class="nx">DataStore</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;Quotes&#39;</span><span class="p">,</span> <span class="nx">query</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+            <span class="nx">quotes</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">quote</span> <span class="o">=</span> <span class="nx">response</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+                <span class="nx">quotes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">quote</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="c1">//Change the page now</span>
+            <span class="nx">$</span><span class="p">.</span><span class="nx">mobile</span><span class="p">.</span><span class="nx">changePage</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#quotespage&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;pageinit&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#authorList&#39;</span><span class="p">).</span><span class="nx">empty</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#authorList&quot;</span><span class="p">).</span><span class="nx">listview</span><span class="p">(</span><span class="s1">&#39;refresh&#39;</span><span class="p">);</span>
+
+    <span class="c1">//Initialize Kinvey</span>
+    <span class="nx">mBaasInit</span><span class="p">();</span>
+
+    <span class="c1">//When an Author List Element is clicked, fetch their quotes</span>
+    <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="s1">&#39;#authorList li&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">populateQuotes</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">());</span>
+    <span class="p">});</span>
+
+    <span class="c1">//When quotespage is live, clear the current quotes and populate the new ones</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#quotespage&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;pageshow&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#quotesList&#39;</span><span class="p">).</span><span class="nx">empty</span><span class="p">();</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#quotesTitle&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">quotes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">who</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">quotes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#quotesList&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;&lt;div style=&quot;white-space:normal;&quot;&gt;&#39;</span> <span class="o">+</span> <span class="nx">quotes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">what</span> <span class="o">+</span> <span class="s1">&#39;&lt;/div&gt;&lt;/li&gt;&#39;</span><span class="p">);</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#quotesList&#39;</span><span class="p">).</span><span class="nx">listview</span><span class="p">(</span><span class="s1">&#39;refresh&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let us discuss the source code in detail now.</p>
+<ul class="simple">
+<li>First thing to note is the standard jQuery Mobile <tt class="docutils literal"><span class="pre">pageinit</span></tt> function on
+<strong>line 49</strong>. So, when the index page is ready, we first just clear up the
+author list.</li>
+<li>Next, we initialize the connection to the Kinvey service by invoking the
+<tt class="docutils literal"><span class="pre">mBaasInit()</span></tt> method on <strong>line 54</strong>. We will come to the rest of the code
+in a while.</li>
+<li>The <tt class="docutils literal"><span class="pre">mBaasInit()</span></tt> method is defined on <strong>line 4</strong>. It is standard
+boilerplate code that Kinvey provides. Essentially, what we are doing here is
+initialization the Kinvey connection via the <tt class="docutils literal"><span class="pre">Kinvey.init()</span></tt> method.
+Notice that you will need to substitute the value of <tt class="docutils literal"><span class="pre">YOUR_APP_KEY</span></tt> and
+<tt class="docutils literal"><span class="pre">YOUR_APP_SECRET</span></tt> with the respective values for your application. Once the
+initialization is good, we invoke the <tt class="docutils literal"><span class="pre">populateAuthors()</span></tt> method on
+<strong>line 12</strong>.</li>
+<li>The <tt class="docutils literal"><span class="pre">populateAuthors()</span></tt> method is defined on <strong>line 18</strong>. The key thing to
+note here is the <tt class="docutils literal"><span class="pre">Kinvey.DataStore.find</span></tt> method that we are using. The
+first parameter is the name of our collection (in our case it is authors).
+The second parameter is an optional query parameter which we are not using
+here but will do later on. The query parameter can be used to filter the
+results. The 3rd parameter is the success callback function that is providing
+the result. The result is an error of all the models in the collection and
+we simply iterate through it, extract out the information, and display the
+authors in an unordered list element.</li>
+<li>Now, visit <strong>line 57</strong>, where we are enabling a click function on any of the
+list elements in the <tt class="docutils literal"><span class="pre">authorList</span></tt> unordered list. If there is a click, it
+will invoke the <tt class="docutils literal"><span class="pre">populateQuotes</span></tt> method and pass the label, which will
+contain the author name.</li>
+<li>The <tt class="docutils literal"><span class="pre">populateQuotes</span></tt> method is defined on <strong>line 32</strong>. It utilizes the
+<tt class="docutils literal"><span class="pre">Kinvey.Query</span></tt> object first and passes the criteria for filtering the
+quotes by the who attribute. The value passed is that of the author name,
+since we need to now retrieve only the quotes of that author.</li>
+<li>The next call should be familiar now and the <tt class="docutils literal"><span class="pre">Kinvey.DataStore.find</span></tt>
+method is invoked. This time it is invoked on the quotes collection, the
+Query filter is provided, which will give only those models whose who
+attribute has the value of the Author name selected. The 3rd parameter is
+once again the success callback method, where we iterate through the Quote
+records and populate it in the quotes variable.  We then switch the page to
+the quotespage on <strong>line 44</strong>.</li>
+<li>Finally, <strong>lines 62-69</strong> iterate through the quotes global variable and
+populates the <tt class="docutils literal"><span class="pre">quotesList</span></tt> unordered list.</li>
+</ul>
+<p>This completes our discussion of writing Firefox OS applications that are
+powered by a mBaaS. Load it in the WebIDE and run it on the simulator to see
+it in action.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="copyright.html" title="Attribution-ShareAlike 4.0 International"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="episode09.html" title="9. Device Storage"
+             >previous</a> |</li>
+        <li><a href="index.html">Firefox OS App Development Tutorial 2nd Edition documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2015, Romin Irani.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
